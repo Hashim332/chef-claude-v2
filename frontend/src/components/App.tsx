@@ -2,7 +2,7 @@ import Navbar from "./Navbar";
 
 function App() {
   return (
-    <div className="bg-[#f5f0e8] min-h-screen w-full ">
+    <div className="bg-[#f5f0e8] min-h-screen w-full p-4">
       <Navbar />
       <h1 className="">hello world</h1>
     </div>
