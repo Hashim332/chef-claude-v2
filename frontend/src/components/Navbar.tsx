@@ -1,4 +1,5 @@
 import chefLogo from "../assets/chef-claude-logo.png";
+import { Button } from "@/components/ui/button";
 import {
   SignedIn,
   SignedOut,
@@ -23,12 +24,26 @@ export default function Navbar() {
         <li>
           <a href="">Contact</a>
         </li>
-        <li className="hover:bg-black/10 hover:cursor-pointer">
+        <li>
           <SignedOut>
-            <SignInButton mode="modal" />
+            <SignInButton mode="modal">
+              <Button
+                className="text-xl hover:cursor-pointer"
+                variant="default"
+              >
+                Sign in
+              </Button>
+            </SignInButton>
           </SignedOut>
           <SignedIn>
-            <SignOutButton />
+            <SignOutButton>
+              <Button
+                className="text-xl hover:cursor-pointer"
+                variant="outline"
+              >
+                Sign out
+              </Button>
+            </SignOutButton>
           </SignedIn>
         </li>
       </ul>
