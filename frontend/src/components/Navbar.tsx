@@ -22,6 +22,11 @@ export default function Navbar() {
       </a>
       <ul className="flex flex-row items-center gap-8 mr-10 text-xl">
         <li>
+          <SignedIn>
+            <a href="">Your Recipes</a>
+          </SignedIn>
+        </li>
+        <li>
           <a href="">Contact</a>
         </li>
         <li>

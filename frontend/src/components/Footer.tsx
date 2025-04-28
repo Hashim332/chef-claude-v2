@@ -4,13 +4,15 @@ export default function Footer() {
   return (
     <footer className="bg-background border-t border-border py-3 w-full">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          {/* Developer Info */}
-          <div className="text-center md:text-left">
-            <h3 className="font-bold text-lg text-foreground">Hashim Rafiq</h3>
+        <div className="flex items-center justify-between">
+          {/* Developer Info with smaller, lighter text */}
+          <div>
+            <span className="text-sm text-muted-foreground">
+              By: Hashim Rafiq
+            </span>
           </div>
 
-          {/* Social Links */}
+          {/* Social Links - Now in the middle */}
           <div className="flex space-x-4 items-center">
             {/* GitHub Icon */}
             <a
@@ -22,8 +24,8 @@ export default function Footer() {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -45,8 +47,8 @@ export default function Footer() {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -68,8 +70,8 @@ export default function Footer() {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -82,12 +84,9 @@ export default function Footer() {
               </svg>
             </a>
           </div>
-        </div>
 
-        {/* Copyright */}
-        <div className="border-t border-border mt-4 pt-4 text-center text-sm text-muted-foreground">
-          <p>© {currentYear} | Built in 2025</p>
-          <p className="mt-1">All rights reserved</p>
+          {/* Copyright - Simplified to one line */}
+          <div className="text-sm text-muted-foreground">© {currentYear}</div>
         </div>
       </div>
     </footer>
