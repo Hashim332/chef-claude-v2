@@ -1,16 +1,16 @@
 import { useIngredients } from "@/context/HomeContext";
 
 export default function IngredientsList() {
-  const { ingredients, setIngredients } = useIngredients();
+  const { ingredients } = useIngredients();
 
   return (
-    <div>
-      <h1>Your ingredients:</h1>
-      <p>
+    <div className="mt-12">
+      <h1 className="text-3xl font-semibold">Your ingredients:</h1>
+      <div>
         {ingredients.map((ingredient) => (
-          <div>{ingredient}</div>
+          <div key={ingredient}>{ingredient}</div>
         ))}
-      </p>
+      </div>
     </div>
   );
 }
