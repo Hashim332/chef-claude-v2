@@ -1,10 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useIngredients } from "@/context/HomeContext";
 
 export default function IngredientForm() {
   const [input, setInput] = useState<string>("");
-  const [ingredients, setIngredients] = useState<string[]>([]);
+  const { ingredients, setIngredients } = useIngredients();
+  console.log(ingredients);
 
   const REMOVE_DISALLOWED_REGEX = /[^a-zA-Z]/g;
 
@@ -15,6 +17,7 @@ export default function IngredientForm() {
 
   function handleClick() {
     setIngredients((prevIngredients) => [...prevIngredients, input]);
+    setInput("");
   }
 
   return (
@@ -31,9 +34,6 @@ export default function IngredientForm() {
           + Add ingredient
         </Button>
       </div>
-      {ingredients.map((ingredient) => (
-        <div>{ingredient}</div>
-      ))}
     </div>
   );
 }
