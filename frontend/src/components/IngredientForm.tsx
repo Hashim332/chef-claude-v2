@@ -17,12 +17,20 @@ export default function IngredientForm() {
   }
 
   function validateInput() {
-    const isAdded = ingredients.includes(input);
+    if (!input) {
+      setAlert("Please enter an ingredient");
+      setTimeout(() => setAlert(""), 3000);
+      return;
+    }
+    // parses the string to eliminate duplicates by capitalising the first letter and decapitalising all others
+    const formattedInput =
+      input[0].toUpperCase() + input.substring(1, input.length).toLowerCase();
+    const isAdded = ingredients.includes(formattedInput);
     if (isAdded) {
       setAlert("This item is already in your list");
       setTimeout(() => setAlert(""), 3000);
     } else {
-      setIngredients((prevIngredients) => [...prevIngredients, input]);
+      setIngredients((prevIngredients) => [...prevIngredients, formattedInput]);
       setInput("");
     }
   }
@@ -38,16 +46,18 @@ export default function IngredientForm() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-5">
-      <h1 className="text-4xl">Enter some ingredients to get started</h1>
-      <div className="flex gap-5">
+    <div className=" flex flex-col items-center gap-5">
+      <h1 className="text-3xl md:text-4xl">
+        Enter some ingredients to get started
+      </h1>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full justify-center">
         <div className="relative">
           <Input
             value={input}
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             placeholder="e.g Pasta"
-            className="w-xs !text-lg"
+            className=" md:w-xs !text-lg"
           />
           {alert && (
             <div className="absolute left-0 right-0 top-full mt-2 z-10">
@@ -62,7 +72,7 @@ export default function IngredientForm() {
                   </div>
                   <button
                     onClick={() => setAlert("")}
-                    className="text-pink-400 hover:text-pink-600 transition-colors ml-2"
+                    className="sm:w-auto text-pink-400 hover:text-pink-600 transition-colors ml-2"
                   >
                     <X size={16} />
                   </button>
