@@ -7,8 +7,14 @@ export default function SendPrompt({}) {
   const [isLoading, setIsLoading] = useState(false);
   const { ingredients } = useIngredients();
 
+  function submitIngredients() {
+    console.log("Your ingredients were submitted");
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 3000);
+  }
+
   return (
-    <div className="mt-8 bg-amber-50 border border-primary rounded-lg p-4 shadow-sm">
+    <div className="mt-8 mx-auto bg-amber-50 border border-primary rounded-lg p-4 shadow-sm w-auto max-w-4xl ">
       <div className="flex items-center gap-2 mb-3">
         <ChefHat className="text-primary" size={24} />
         <h3 className="text-lg font-semibold text-gray-800">Ready to cook!</h3>
@@ -21,6 +27,7 @@ export default function SendPrompt({}) {
 
       <div className="flex justify-end">
         <Button
+          onClick={submitIngredients}
           disabled={isLoading}
           className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md font-medium transition-colors hover:cursor-pointer"
         >
