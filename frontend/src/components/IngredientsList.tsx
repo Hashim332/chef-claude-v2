@@ -10,7 +10,7 @@ export default function IngredientsList() {
       {ingredientsExists && (
         <div>
           <div className="flex flex-row items-center mt-8 justify-between">
-            <h1 className="text-3xl font-semibold">Your ingredients:</h1>
+            <h1 className="text-3xl font-semibold mb-2">Your ingredients:</h1>
             {ingredients.length > 0 && (
               <h2
                 className={`text-sm px-3 py-1 rounded-full font-medium ${
