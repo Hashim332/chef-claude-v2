@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Hello from Express + TypeScript!");
   const { userId } = getAuth(req);
   console.log(userId);
