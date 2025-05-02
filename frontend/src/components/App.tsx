@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import { RecipeGeneratorProvider } from "@/context/HomeContext";
 
 function App() {
+  console.log(window.location);
   return (
     <div className="min-h-screen w-full p-4 flex flex-col max-w-3xl mx-auto">
       <Navbar />
