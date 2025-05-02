@@ -1,8 +1,8 @@
-import { useIngredients } from "@/context/HomeContext";
+import { useRecipeContext } from "@/context/HomeContext";
 import { X } from "lucide-react";
 
 export default function IngredientsList() {
-  const { ingredients, setIngredients } = useIngredients();
+  const { ingredients, setIngredients } = useRecipeContext();
   const ingredientsExists = ingredients.length !== 0;
 
   function removeIngredient(ingredient: string) {

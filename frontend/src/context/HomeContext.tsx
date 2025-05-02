@@ -1,26 +1,39 @@
 import { createContext, useContext, useState } from "react";
 
-type IngredientContextType = {
-  ingredients: string[];
-  setIngredients: React.Dispatch<React.SetStateAction<string[]>>;
+type Recipe = {
+  type: string;
+  text: string;
 };
 
-const IngredientContext = createContext<IngredientContextType | null>(null);
+type RecipeGenetaratorContextType = {
+  ingredients: string[];
+  setIngredients: React.Dispatch<React.SetStateAction<string[]>>;
+  recipe: Recipe;
+  setRecipe: React.Dispatch<React.SetStateAction<Recipe>>;
+};
+
+const recipeGenerator = createContext<RecipeGenetaratorContextType | null>(
+  null
+);
+
 // prettier-ignore
-export function IngredientProvider({ children }: { children: React.ReactNode }) {
+export function RecipeGeneratorProvider({ children }: { children: React.ReactNode }) {
   const [ingredients, setIngredients] = useState<string[]>([]);
+  const [recipe, setRecipe] = useState<Recipe>({type:"", text:""})
 
   return (
-    <IngredientContext.Provider value={{ ingredients, setIngredients }}>
+    <recipeGenerator.Provider value={{ ingredients, setIngredients,recipe, setRecipe }}>
       {children}
-    </IngredientContext.Provider>
+    </recipeGenerator.Provider>
   );
 }
 
-export function useIngredients() {
-  const context = useContext(IngredientContext);
+export function useRecipeContext() {
+  const context = useContext(recipeGenerator);
   if (!context) {
-    throw new Error("useIngredients must be used within an IngredientProvider");
+    throw new Error(
+      "useRecipeContext must be used within an RecipeGenerator Provider"
+    );
   }
   return context;
 }

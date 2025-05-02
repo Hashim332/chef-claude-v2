@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { useIngredients } from "@/context/HomeContext";
+import { useRecipeContext } from "@/context/HomeContext";
 import { AlertCircle, X, Plus } from "lucide-react";
 
 export default function IngredientForm() {
   const [input, setInput] = useState<string>("");
   const [alert, setAlert] = useState<string>("");
-  const { ingredients, setIngredients } = useIngredients();
+  const { ingredients, setIngredients } = useRecipeContext();
 
   const REMOVE_DISALLOWED_REGEX = /[^a-zA-Z\s]/g;
 

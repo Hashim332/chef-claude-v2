@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { ChefHat, ArrowRight } from "lucide-react";
-import { useIngredients } from "@/context/HomeContext";
+import { useRecipeContext } from "@/context/HomeContext";
 import { Button } from "./ui/button";
 import { useAuth } from "@clerk/clerk-react";
 
 export default function SendPrompt({}) {
   const [isLoading, setIsLoading] = useState(false);
-  const { ingredients } = useIngredients();
+  const { setRecipe } = useRecipeContext();
+  const { ingredients } = useRecipeContext();
   const { getToken } = useAuth();
 
   async function submitIngredients() {
@@ -29,7 +30,7 @@ export default function SendPrompt({}) {
         }
       );
       const data = await res.json();
-      console.log(data);
+      setRecipe(data);
     } catch (err) {
       console.error(err);
     }
