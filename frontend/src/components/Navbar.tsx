@@ -27,9 +27,6 @@ export default function Navbar() {
           </SignedIn>
         </li>
         <li>
-          <a href="">Contact</a>
-        </li>
-        <li>
           <SignedOut>
             <SignInButton mode="modal">
               <Button
