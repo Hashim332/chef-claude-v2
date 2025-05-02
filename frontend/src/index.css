@@ -4,6 +4,12 @@
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:is(.dark *));
 
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+}
+
 html,
 body {
   height: 100%;

@@ -5,7 +5,7 @@ import { RecipeGeneratorProvider } from "@/context/HomeContext";
 
 function App() {
   return (
-    <div className="min-h-screen w-full p-4 flex flex-col">
+    <div className="min-h-screen w-full p-4 flex flex-col max-w-3xl mx-auto">
       <Navbar />
       <main className="flex-grow p-10">
         <RecipeGeneratorProvider>

@@ -9,16 +9,10 @@ export default function Recipe() {
     return <div>Loading recipe...</div>;
   }
 
-  const recipeExists = recipe.text !== "" && recipe.text;
-  const random = "# Hi, *Pluto*!";
-
   return (
     <div className="max-w-2xl mx-auto my-8 prose">
       <h1 className="text-3xl my-4 mr-auto">Recipe:</h1>
-      {recipeExists && (
-        <Markdown remarkPlugins={[remarkGfm]}>{recipe.text}</Markdown>
-      )}
-      <Markdown>{random}</Markdown>
+      <Markdown remarkPlugins={[remarkGfm]}>{recipe.text}</Markdown>
     </div>
   );
 }
