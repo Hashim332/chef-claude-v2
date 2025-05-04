@@ -3,7 +3,7 @@ import Home from "@/pages/Home";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { RecipeGeneratorProvider } from "@/context/AppContext";
-import YourRecipes from "@/pages/YourRecipes";
+import YourRecipes from "@/pages/YourRecipesPage/YourRecipes";
 
 function App() {
   return (
