@@ -17,7 +17,6 @@ router.post("/recipes/by-ingredients", async (req, res) => {
 
   try {
     const recipe = await getRecipeFromChefClaude(ingredients);
-    console.log(recipe);
     res.status(200).json(recipe);
   } catch (err) {
     console.error("Server error:", err);

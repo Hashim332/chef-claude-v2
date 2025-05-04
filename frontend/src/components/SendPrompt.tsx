@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { ChefHat, ArrowRight } from "lucide-react";
-import { useRecipeContext } from "@/context/HomeContext";
+import { useRecipeContext } from "@/context/AppContext";
 import { Button } from "./ui/button";
 import { useAuth } from "@clerk/clerk-react";
 
 export default function SendPrompt({}) {
   const [isLoading, setIsLoading] = useState(false);
-  const { ingredients, setRecipe } = useRecipeContext();
+  const { ingredients, setRecipe, recipe } = useRecipeContext();
   const { getToken } = useAuth();
 
   async function submitIngredients() {
-    setRecipe({ type: "text", text: "" });
+    setRecipe("");
     setIsLoading(true);
     try {
       const token = await getToken();
@@ -28,7 +28,8 @@ export default function SendPrompt({}) {
         }
       );
       const data = await res.json();
-      setRecipe(data);
+      setRecipe(data.text);
+      console.log("your recipe should be here: ", recipe);
       setIsLoading(false);
     } catch (err) {
       console.error(err);

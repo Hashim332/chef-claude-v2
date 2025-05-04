@@ -1,9 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-type Recipe = {
-  type: string;
-  text: string;
-};
+type Recipe = string;
 
 type RecipeGenetaratorContextType = {
   ingredients: string[];
@@ -19,10 +16,10 @@ const recipeGenerator = createContext<RecipeGenetaratorContextType | null>(
 // prettier-ignore
 export function RecipeGeneratorProvider({ children }: { children: React.ReactNode }) {
   const [ingredients, setIngredients] = useState<string[]>([]);
-  const [recipe, setRecipe] = useState<Recipe>({type:"", text:""})
+  const [recipe, setRecipe] = useState<Recipe>("")
 
   return (
-    <recipeGenerator.Provider value={{ ingredients, setIngredients,recipe, setRecipe }}>
+    <recipeGenerator.Provider value={{ ingredients, setIngredients, recipe, setRecipe }}>
       {children}
     </recipeGenerator.Provider>
   );

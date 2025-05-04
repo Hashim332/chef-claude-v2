@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { useRecipeContext } from "@/context/HomeContext";
+import { useRecipeContext } from "@/context/AppContext";
 import { AlertCircle, X, Plus } from "lucide-react";
 
 export default function IngredientForm() {

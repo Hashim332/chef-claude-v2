@@ -1,4 +1,4 @@
-import { useRecipeContext } from "@/context/HomeContext";
+import { useRecipeContext } from "@/context/AppContext";
 import { X } from "lucide-react";
 
 export default function IngredientsList() {
@@ -11,6 +11,7 @@ export default function IngredientsList() {
     );
     setIngredients(newIngredients);
   }
+
   return (
     <div className="m-2 md:m-1">
       {ingredientsExists && (
@@ -31,12 +32,12 @@ export default function IngredientsList() {
               </div>
             )}
           </div>
-          <div className="mt-4 mx-4">
-            <div className="flex flex-col md:flex-row md:flex-wrap md:gap-3">
+          <div className="mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {ingredients.map((ingredient) => (
                 <div
                   key={ingredient}
-                  className="mt-2 md:mt-0 md:flex-grow-0 md:w-auto flex items-center justify-between px-4 py-2 bg-white rounded-md"
+                  className="bg-white rounded-md px-4 py-2 flex items-center justify-between"
                 >
                   <p className="font-serif mr-3">{ingredient}</p>
                   <button
