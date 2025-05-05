@@ -23,7 +23,9 @@ export default function Navbar() {
       <ul className="flex flex-row items-center gap-8 mr-10 text-xl">
         <li>
           <SignedIn>
-            <a href="/your-recipes">Your Recipes</a>
+            <a className="hover:text-primary" href="/your-recipes">
+              Your Recipes
+            </a>
           </SignedIn>
         </li>
         <li>
