@@ -6,6 +6,8 @@ type RecipeGeneratorContext = {
   setIngredients: React.Dispatch<React.SetStateAction<string[]>>;
   recipe: RecipeObject | null;
   setRecipe: React.Dispatch<React.SetStateAction<RecipeObject | null>>;
+  savedRecipes: RecipeObject[];
+  setSavedRecipes: React.Dispatch<React.SetStateAction<RecipeObject[]>>;
 };
 
 const recipeGenerator = createContext<RecipeGeneratorContext | null>(null);
@@ -14,9 +16,10 @@ const recipeGenerator = createContext<RecipeGeneratorContext | null>(null);
 export function RecipeGeneratorProvider({ children }: { children: React.ReactNode }) {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [recipe, setRecipe] = useState<RecipeObject | null>(null)
+  const [savedRecipes, setSavedRecipes] = useState<RecipeObject[]>([])
 
   return (
-    <recipeGenerator.Provider value={{ ingredients, setIngredients, recipe, setRecipe }}>
+    <recipeGenerator.Provider value={{ ingredients, setIngredients, recipe, setRecipe, savedRecipes, setSavedRecipes }}>
       {children}
     </recipeGenerator.Provider>
   );

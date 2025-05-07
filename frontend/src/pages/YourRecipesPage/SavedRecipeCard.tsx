@@ -2,20 +2,24 @@ import { useState } from "react";
 import RecipeModal from "./RecipeModal";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { RecipeObject } from "@/utils/utils";
 
-export default function SavedRecipeCard() {
+type RecipeCardProps = {
+  recipe: RecipeObject;
+};
+
+export default function SavedRecipeCard({ recipe }: RecipeCardProps) {
   const [showRecipe, setShowRecipe] = useState(false);
 
   return (
     <section>
       <div className="my-4 w-full rounded-md p-4 flex justify-between items-center">
-        {/* Only this inner div is hoverable */}
         <div
           onClick={() => setShowRecipe(true)}
           className="flex flex-col border hover:bg-secondary/10 rounded-md p-2 w-full cursor-pointer transition-colors"
         >
-          <h1 className="text-xl font-bold">Recipe name</h1>
-          <p>Recipe description</p>
+          <h1 className="text-xl font-bold">{recipe.recipeName}</h1>
+          <p>{recipe.quickSummary}</p>
         </div>
 
         <Button
@@ -29,7 +33,14 @@ export default function SavedRecipeCard() {
         </Button>
       </div>
 
-      {showRecipe && <RecipeModal closeModal={() => setShowRecipe(false)} />}
+      {showRecipe && (
+        <RecipeModal
+          key={recipe.recipeName}
+          closeModal={() => setShowRecipe(false)}
+          recipeName={recipe.recipeName}
+          fullRecipe={recipe.fullRecipe}
+        />
+      )}
     </section>
   );
 }

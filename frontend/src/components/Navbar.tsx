@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import chefLogo from "../assets/chef-claude-logo.png";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +11,8 @@ import {
 export default function Navbar() {
   return (
     <nav className="flex flex-row justify-between">
-      <a href="/">
-        <div className="flex flex-row  items-center ml-10">
+      <Link to="/">
+        <div className="flex flex-row items-center ml-10">
           <img
             src={chefLogo}
             alt="chef-claude"
@@ -19,13 +20,13 @@ export default function Navbar() {
           />
           <h1 className="text-3xl mx-4">Chef Claude</h1>
         </div>
-      </a>
+      </Link>
       <ul className="flex flex-row items-center gap-8 mr-10 text-xl">
         <li>
           <SignedIn>
-            <a className="hover:text-primary" href="/your-recipes">
+            <Link className="hover:text-primary" to="/your-recipes">
               Your Recipes
-            </a>
+            </Link>
           </SignedIn>
         </li>
         <li>
