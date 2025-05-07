@@ -25,7 +25,10 @@ export default function RecipeModal({
           {/* Long content here */}
           Lorem ipsum dolor sit amet, consectetur adipiscing elit...
         </p>
-        <Button className="bg-red-600 hover:bg-red-700 hover:cursor-pointer mt-4 font-bold text-md">
+        <Button
+          onClick={closeModal}
+          className="bg-red-600 hover:bg-red-700 hover:cursor-pointer mt-4 font-bold text-md"
+        >
           Delete
           <Trash2 />
         </Button>

@@ -29,7 +29,7 @@ export default function SendPrompt({}) {
       );
       const data = await res.json();
       setRecipe(data.text);
-      console.log("your recipe should be here: ", recipe);
+      console.log("your recipe should be here: ", data);
       setIsLoading(false);
     } catch (err) {
       console.error(err);

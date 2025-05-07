@@ -8,25 +8,27 @@ export default function SavedRecipeCard() {
 
   return (
     <section>
-      <div
-        onClick={() => setShowRecipe(true)}
-        className="border-1 my-4 flex flex-row justify-between hover:bg-secondary/10 w-full rounded-md p-4 hover:cursor-pointer"
-      >
-        <div>
+      <div className="my-4 w-full rounded-md p-4 flex justify-between items-center">
+        {/* Only this inner div is hoverable */}
+        <div
+          onClick={() => setShowRecipe(true)}
+          className="flex flex-col border hover:bg-secondary/10 rounded-md p-2 w-full cursor-pointer transition-colors"
+        >
           <h1 className="text-xl font-bold">Recipe name</h1>
           <p>Recipe description</p>
         </div>
+
         <Button
-          className="bg-red-600 hover:bg-red-700 hover:cursor-pointer mt-4 font-bold text-md my-auto "
-          // TODO: placeholder onclick, sync up with modal button
+          className="ml-4 bg-tertiary text-secondary border hover:bg-red-500 hover:cursor-pointer"
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // still good practice
             console.log("recipe removed");
           }}
         >
           <Trash2 />
         </Button>
       </div>
+
       {showRecipe && <RecipeModal closeModal={() => setShowRecipe(false)} />}
     </section>
   );
