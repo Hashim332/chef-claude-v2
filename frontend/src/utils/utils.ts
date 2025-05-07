@@ -20,3 +20,9 @@ export function smoothScrollTo(targetY: number, duration = 800) {
 
   requestAnimationFrame(step);
 }
+
+export type RecipeObject = {
+  recipeName: string;
+  quickSummary: string;
+  fullRecipe: string;
+};

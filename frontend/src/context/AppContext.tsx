@@ -1,22 +1,19 @@
 import { createContext, useContext, useState } from "react";
+import { RecipeObject } from "@/utils/utils";
 
-type Recipe = string;
-
-type RecipeGenetaratorContextType = {
+type RecipeGeneratorContext = {
   ingredients: string[];
   setIngredients: React.Dispatch<React.SetStateAction<string[]>>;
-  recipe: Recipe;
-  setRecipe: React.Dispatch<React.SetStateAction<Recipe>>;
+  recipe: RecipeObject | null;
+  setRecipe: React.Dispatch<React.SetStateAction<RecipeObject | null>>;
 };
 
-const recipeGenerator = createContext<RecipeGenetaratorContextType | null>(
-  null
-);
+const recipeGenerator = createContext<RecipeGeneratorContext | null>(null);
 
 // prettier-ignore
 export function RecipeGeneratorProvider({ children }: { children: React.ReactNode }) {
   const [ingredients, setIngredients] = useState<string[]>([]);
-  const [recipe, setRecipe] = useState<Recipe>("")
+  const [recipe, setRecipe] = useState<RecipeObject | null>(null)
 
   return (
     <recipeGenerator.Provider value={{ ingredients, setIngredients, recipe, setRecipe }}>

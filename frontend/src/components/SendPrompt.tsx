@@ -6,11 +6,11 @@ import { useAuth } from "@clerk/clerk-react";
 
 export default function SendPrompt({}) {
   const [isLoading, setIsLoading] = useState(false);
-  const { ingredients, setRecipe, recipe } = useRecipeContext();
+  const { ingredients, setRecipe } = useRecipeContext();
   const { getToken } = useAuth();
 
   async function submitIngredients() {
-    setRecipe("");
+    setRecipe(null);
     setIsLoading(true);
     try {
       const token = await getToken();
@@ -28,8 +28,8 @@ export default function SendPrompt({}) {
         }
       );
       const data = await res.json();
-      setRecipe(data.text);
-      console.log("your recipe should be here: ", data);
+
+      setRecipe(data);
       setIsLoading(false);
     } catch (err) {
       console.error(err);
