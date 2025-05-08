@@ -23,16 +23,12 @@ router.post("/recipes/by-ingredients", async (req, res) => {
 
   try {
     const recipe = await getRecipeFromChefClaude(ingredients);
-
     // text is a part of the content block recieved from claude which is being parsed to form an valid JS object
     if (recipe.type === "text") {
       const recipeObject = JSON.parse(recipe.text);
       console.log(recipeObject);
       res.status(200).json(recipeObject);
     }
-
-    // console.log(recipe);
-    // res.status(200).json(recipe);
   } catch (err) {
     console.error("Server error:", err);
     res
