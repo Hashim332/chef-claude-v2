@@ -1,16 +1,23 @@
 import { useRecipeContext } from "@/context/AppContext";
 import { Button } from "./ui/button";
+import { useState } from "react";
 
 export default function SaveRecipeButton() {
-  const { recipe, setSavedRecipes, savedRecipes } = useRecipeContext();
+  const [buttonOff, setButtonOff] = useState(false);
+  const { recipe, setSavedRecipes } = useRecipeContext();
 
   function SaveRecipe() {
     recipe &&
       setSavedRecipes((prevSavedRecipes) => [...prevSavedRecipes, recipe]);
-    console.log(savedRecipes);
+    setButtonOff(true);
   }
+
   return (
-    <Button onClick={SaveRecipe} className="text-xl hover:cursor-pointer">
+    <Button
+      onClick={SaveRecipe}
+      className="text-xl hover:cursor-pointer"
+      disabled={buttonOff}
+    >
       Save Recipe
     </Button>
   );

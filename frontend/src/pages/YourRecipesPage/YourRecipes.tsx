@@ -12,6 +12,9 @@ export default function YourRecipes() {
   return (
     <div>
       <h1 className="text-3xl">Your Recipes</h1>
+      {recipeCards.length === 0 && (
+        <p className="text-lg my-4">You have no saved recipes.</p>
+      )}
       {recipeCards}
     </div>
   );

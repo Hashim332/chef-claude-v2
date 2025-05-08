@@ -7,12 +7,14 @@ type RecipeModalProps = {
   closeModal: () => void;
   recipeName: string;
   fullRecipe: string;
+  deleteRecipe: (arg0: string) => void;
 };
 
 export default function RecipeModal({
   closeModal,
   recipeName,
   fullRecipe,
+  deleteRecipe,
 }: RecipeModalProps) {
   return (
     <div
@@ -28,13 +30,18 @@ export default function RecipeModal({
           onClick={closeModal}
           className="absolute top-2 right-2 text-gray-500 hover:text-primary transition-colors cursor-pointer"
         />
-        <h2 className="text-xl font-bold mb-4">{recipeName}</h2>
-        <div className="text-sm leading-relaxed">
+        <h2 className="text-xl font-bold mb-4 text-primary underline">
+          {recipeName}
+        </h2>
+        <div className="text-sm leading-relaxed text-xl">
           <Markdown remarkPlugins={[remarkGfm]}>{fullRecipe}</Markdown>
         </div>
         <Button
-          onClick={closeModal}
-          className="bg-red-600 hover:bg-red-700 hover:cursor-pointer mt-4 font-bold text-md"
+          onClick={() => {
+            deleteRecipe(recipeName);
+            closeModal();
+          }}
+          className="bg-red-600 hover:bg-red-700 hover:cursor-pointer mt-8 w-full sm:max-w-30 font-bold text-md"
         >
           Delete
           <Trash2 />

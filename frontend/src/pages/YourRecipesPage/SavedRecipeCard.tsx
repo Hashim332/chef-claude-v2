@@ -3,13 +3,26 @@ import RecipeModal from "./RecipeModal";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { RecipeObject } from "@/utils/utils";
+import { useRecipeContext } from "@/context/AppContext";
 
 type RecipeCardProps = {
   recipe: RecipeObject;
 };
 
 export default function SavedRecipeCard({ recipe }: RecipeCardProps) {
+  const { savedRecipes, setSavedRecipes } = useRecipeContext();
   const [showRecipe, setShowRecipe] = useState(false);
+
+  function deleteRecipe(recipeName: string) {
+    if (savedRecipes !== undefined) {
+      const newSavedRecipes = savedRecipes.filter(
+        (savedRecipe: RecipeObject) => {
+          savedRecipe.recipeName !== recipeName;
+        }
+      );
+      setSavedRecipes(newSavedRecipes);
+    }
+  }
 
   return (
     <section>
@@ -26,7 +39,7 @@ export default function SavedRecipeCard({ recipe }: RecipeCardProps) {
           className="ml-4 bg-tertiary text-secondary border hover:bg-red-500 hover:cursor-pointer"
           onClick={(e) => {
             e.stopPropagation(); // still good practice
-            console.log("recipe removed");
+            deleteRecipe(recipe.recipeName);
           }}
         >
           <Trash2 />
@@ -39,6 +52,7 @@ export default function SavedRecipeCard({ recipe }: RecipeCardProps) {
           closeModal={() => setShowRecipe(false)}
           recipeName={recipe.recipeName}
           fullRecipe={recipe.fullRecipe}
+          deleteRecipe={deleteRecipe}
         />
       )}
     </section>

@@ -2,7 +2,7 @@ import { useRecipeContext } from "@/context/AppContext";
 import { X } from "lucide-react";
 
 export default function IngredientsList() {
-  const { ingredients, setIngredients } = useRecipeContext();
+  const { ingredients, setIngredients, setRecipe } = useRecipeContext();
   const ingredientsExists = ingredients.length !== 0;
 
   function removeIngredient(ingredient: string) {
@@ -10,6 +10,9 @@ export default function IngredientsList() {
       (toRemove) => ingredient !== toRemove
     );
     setIngredients(newIngredients);
+    if (newIngredients.length === 0) {
+      setRecipe(null);
+    }
   }
 
   return (
