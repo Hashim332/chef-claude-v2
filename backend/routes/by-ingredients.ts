@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.use(express.json());
 
-type Recipe = {
+export type Recipe = {
   recipeName: string;
   quickSummary: string;
   fullRecipe: string;
@@ -26,7 +26,6 @@ router.post("/recipes/by-ingredients", async (req, res) => {
     // text is a part of the content block recieved from claude which is being parsed to form an valid JS object
     if (recipe.type === "text") {
       const recipeObject = JSON.parse(recipe.text);
-      console.log(recipeObject);
       res.status(200).json(recipeObject);
     }
   } catch (err) {
