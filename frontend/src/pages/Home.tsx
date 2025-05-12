@@ -1,7 +1,6 @@
 import IngredientForm from "@/components/IngredientForm";
 import IngredientsList from "@/components/IngredientsList";
 import Recipe from "@/components/Recipe";
-
 import SendPrompt from "@/components/SendPrompt";
 import { useRecipeContext } from "@/context/AppContext";
 import { smoothScrollTo } from "@/utils/utils";
