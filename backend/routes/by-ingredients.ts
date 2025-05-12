@@ -11,7 +11,7 @@ export type Recipe = {
   fullRecipe: string;
 };
 
-router.post("/recipes/by-ingredients", async (req, res) => {
+router.post("/generate/by-ingredients", async (req, res) => {
   const { ingredients } = req.body;
   if (!ingredients || !Array.isArray(ingredients)) {
     res.status(400).json({

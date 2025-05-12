@@ -15,7 +15,7 @@ export default function SendPrompt({}) {
     try {
       const token = await getToken();
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/recipes/by-ingredients`,
+        `${import.meta.env.VITE_API_URL}/generate/by-ingredients`,
         {
           method: "POST",
           headers: {
