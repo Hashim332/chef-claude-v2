@@ -22,7 +22,7 @@ export function smoothScrollTo(targetY: number, duration = 800) {
 }
 
 export type RecipeObject = {
-  recipeId?: string;
+  recipeId?: string | undefined;
   recipeName: string;
   quickSummary: string;
   fullRecipe: string;

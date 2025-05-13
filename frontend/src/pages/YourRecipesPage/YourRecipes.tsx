@@ -1,10 +1,11 @@
-import { useRecipeContext } from "@/context/AppContext";
 import SavedRecipeCard from "./SavedRecipeCard";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
+import { RecipeObject } from "@/utils/utils";
 
 export default function YourRecipes() {
   const { getToken } = useAuth();
+  const [savedRecipes, setSavedRecipes] = useState<RecipeObject[]>([]);
 
   useEffect(() => {
     async function getUserRecipes() {
@@ -26,6 +27,7 @@ export default function YourRecipes() {
         );
         const data = await res.json();
         console.log(data);
+        setSavedRecipes(data.allSavedRecipes);
       } catch (err) {
         console.error("Error with fetching recipes from backend: ", err);
       }
@@ -33,12 +35,17 @@ export default function YourRecipes() {
     getUserRecipes();
   }, []);
 
-  const { savedRecipes } = useRecipeContext(); //TODO: change this into state that gets recipes from db
   const recipeCards = savedRecipes.map((recipeObj) => {
-    return <SavedRecipeCard recipe={recipeObj} />;
+    return (
+      <SavedRecipeCard
+        savedRecipes={savedRecipes}
+        setSavedRecipes={setSavedRecipes}
+        recipe={recipeObj}
+      />
+    );
   });
 
-  console.log("saved recipe array should be visible HERE ---->", savedRecipes);
+  // console.log("saved recipe array should be visible HERE ---->", savedRecipes); //FIXME:
 
   return (
     <div>
