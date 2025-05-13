@@ -1,46 +1,34 @@
 import express from "express";
 import { db } from "../src/firebase";
-// import { doc, getDoc } from "firebase/firestore";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { requireAuth, getAuth } from "@clerk/express";
 import { Recipe } from "./by-ingredients";
 
 const router = express.Router();
 
 router.use(express.json());
-//TODO: attach recipeId to
 router.get("/user-recipes", requireAuth(), async (req, res) => {
   const { userId } = getAuth(req);
 
   if (!userId) {
-    res.status(400).json({ error: "userId and recipe are required" });
+    res.status(400).json({ error: "invalid userId" });
     return;
   }
 
   try {
-    // const docRef = doc(db, "users", userId);
-    // const docSnap = await getDoc(docRef);
-
-    // if (docSnap.exists()) {
-    //   console.log(docSnap.data());
-    // }
     const querySnapshot = await getDocs(
       collection(db, "users", userId, "recipes")
     );
+
+    let userRecipes: Recipe[] = [];
     querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-    });
-    let allRecipes: any = [];
-    querySnapshot.forEach((doc) => {
-      // Add both the document ID and data to the array
-      allRecipes.push({
-        id: doc.id,
-        ...doc.data(), // Spread the document data
-      });
+      // Type assertion to tell TypeScript that the document data matches Recipe type
+      const recipeData = doc.data() as Omit<Recipe, "recipeId">;
+      userRecipes.push({ recipeId: doc.id, ...recipeData });
     });
 
-    res.status(200).json({ allSavedRecipes: allRecipes });
+    res.status(200).json({ allSavedRecipes: userRecipes });
+    return;
   } catch (err) {
     console.error("An error ocurred with writing to db", err);
   }

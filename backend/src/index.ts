@@ -15,8 +15,8 @@ app.use(clerkMiddleware());
 
 app.get("/api", (req, res) => {
   res.send("Hello from Express + TypeScript!");
-  const { userId } = getAuth(req);
-  console.log(userId);
+
+  res.status(200).json({ message: "You hit the root!" });
 });
 
 app.use("/api/", byIngredients);

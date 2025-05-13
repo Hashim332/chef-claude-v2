@@ -6,6 +6,7 @@ const router = express.Router();
 router.use(express.json());
 
 export type Recipe = {
+  recipeId?: string;
   recipeName: string;
   quickSummary: string;
   fullRecipe: string;
