@@ -11,7 +11,7 @@ function App() {
       <RecipeGeneratorProvider>
         <div className="min-h-screen w-full p-4 flex flex-col max-w-3xl mx-auto">
           <Navbar />
-          <main className="flex-grow p-10">
+          <main className="flex-grow p-4 sm:p-10">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/your-recipes" element={<YourRecipes />} />

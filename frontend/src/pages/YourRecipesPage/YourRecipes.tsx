@@ -44,8 +44,6 @@ export default function YourRecipes() {
     );
   });
 
-  // console.log("saved recipe array should be visible HERE ---->", savedRecipes); //FIXME:
-
   return (
     <div>
       <h1 className="text-3xl">Your Recipes</h1>

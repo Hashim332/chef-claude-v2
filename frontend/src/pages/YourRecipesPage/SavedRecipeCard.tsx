@@ -50,7 +50,7 @@ export default function SavedRecipeCard({
 
   return (
     <section>
-      <div className="my-4 w-full rounded-md p-4 flex justify-between items-center">
+      <div className="my-4 w-full rounded-md sm:p-4 flex justify-between items-center">
         <div
           key={recipe.recipeId}
           onClick={() => setShowRecipe(true)}

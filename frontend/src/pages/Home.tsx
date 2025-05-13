@@ -5,6 +5,7 @@ import SendPrompt from "@/components/SendPrompt";
 import { useRecipeContext } from "@/context/AppContext";
 import { smoothScrollTo } from "@/utils/utils";
 import { useEffect, useRef } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 
 export default function Home() {
   const { ingredients, recipe } = useRecipeContext();
@@ -21,6 +22,35 @@ export default function Home() {
 
   return (
     <div>
+      <Tabs
+        defaultValue="image"
+        className="w-full max-w-md border rounded-lg shadow-md overflow-hidden m-auto my-4"
+      >
+        <TabsList className="flex w-full justify-start bg-secondary/10 rounded-t-lg border-b border-gray-200 p-1">
+          <TabsTrigger
+            value="image"
+            className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:rounded-md data-[state=inactive]:bg-transparent data-[state=inactive]:text-gray-600 data-[state=inactive]:shadow-none transition-all py-2 px-4 text-sm font-medium m-1"
+          >
+            Image
+          </TabsTrigger>
+          <TabsTrigger
+            value="manual"
+            className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:rounded-md data-[state=inactive]:bg-transparent data-[state=inactive]:text-gray-600 data-[state=inactive]:shadow-none transition-all py-2 px-4 text-sm font-medium m-1"
+          >
+            Manual
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="image" className="p-4 rounded-b-lg">
+          Make changes to your account here.
+        </TabsContent>
+
+        <TabsContent value="manual" className="p-4 rounded-b-lg">
+          Change your password here.
+        </TabsContent>
+      </Tabs>
+
+      {/* gooba */}
       <IngredientForm />
       <IngredientsList />
       {enoughIngredients && <SendPrompt />}
