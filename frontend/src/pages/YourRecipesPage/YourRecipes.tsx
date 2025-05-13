@@ -26,7 +26,6 @@ export default function YourRecipes() {
           }
         );
         const data = await res.json();
-        console.log(data);
         setSavedRecipes(data.allSavedRecipes);
       } catch (err) {
         console.error("Error with fetching recipes from backend: ", err);

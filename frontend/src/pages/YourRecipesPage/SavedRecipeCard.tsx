@@ -19,24 +19,11 @@ export default function SavedRecipeCard({
 }: RecipeCardProps) {
   const [showRecipe, setShowRecipe] = useState(false);
   const { getToken } = useAuth();
-  //TODO: figure out delete button
-  // const { savedRecipes, setSavedRecipes } = useRecipeContext();
-  // function deleteRecipe(recipeName: string) {
-  //   if (savedRecipes !== undefined) {
-  //     const newSavedRecipes = savedRecipes.filter(
-  //       (savedRecipe: RecipeObject) => {
-  //         savedRecipe.recipeName !== recipeName;
-  //       }
-  //     );
-  //     setSavedRecipes(newSavedRecipes);
-  //   }
-  // }
 
-  async function deleteRecipe(recipeId: string) {
+  async function deleteRecipe(recipeId: string | undefined) {
     if (recipeId === undefined) {
       return;
     }
-    console.log("delete button clicked!");
     try {
       const token = await getToken();
       const res = await fetch(
@@ -49,7 +36,7 @@ export default function SavedRecipeCard({
           },
         }
       );
-
+      // waiting for validated delete and deleteing on client
       if (res.status === 200) {
         const updatedRecipes = savedRecipes.filter((recipe) => {
           recipe.recipeId !== recipeId;
@@ -61,8 +48,6 @@ export default function SavedRecipeCard({
     }
   }
 
-  // console.log("I'M INSIDE THE RECIPECARD ------>", recipe);
-
   return (
     <section>
       <div className="my-4 w-full rounded-md p-4 flex justify-between items-center">
@@ -73,7 +58,6 @@ export default function SavedRecipeCard({
         >
           <h1 className="text-xl font-bold">{recipe.recipeName}</h1>
           <p>{recipe.quickSummary}</p>
-          <div className="font-bold">Recipe id: {recipe.recipeId}</div>
         </div>
 
         <Button

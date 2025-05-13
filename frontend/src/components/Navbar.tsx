@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import chefLogo from "../assets/chef-claude-logo.png";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,40 +9,50 @@ import {
 
 export default function Navbar() {
   return (
-    <nav className="flex flex-row justify-between">
-      <Link to="/">
-        <div className="flex flex-row items-center ml-10">
+    // Increased horizontal padding (px-6) and removed ml-10/mr-10 to rely on padding for spacing
+    <nav className="flex flex-row justify-between px-6 py-2">
+      <a href="/">
+        {/* Removed ml-10, relying on nav padding */}
+        <div className="flex flex-row items-center">
           <img
             src={chefLogo}
             alt="chef-claude"
             className="w-12 h-12 rounded-3xl"
           />
-          <h1 className="text-3xl mx-4">Chef Claude</h1>
+          {/* Reduced text size on small screens (text-2xl), kept original 3xl from sm breakpoint */}
+          <h1 className="text-2xl sm:text-3xl mx-4">Chef Claude</h1>
         </div>
-      </Link>
-      <ul className="flex flex-row items-center gap-8 mr-10 text-xl">
+      </a>
+
+      {/* Reduced text size on small screens (text-lg), kept original xl from sm breakpoint */}
+      {/* Removed mr-10, relying on nav padding */}
+      <ul className="flex flex-row items-center gap-8 text-lg sm:text-xl">
         <li>
           <SignedIn>
-            <Link className="hover:text-primary" to="/your-recipes">
+            <a className="text" href="/your-recipes">
               Your Recipes
-            </Link>
+            </a>
           </SignedIn>
         </li>
-        <li>
+
+        <li className="flex items-center gap-4">
           <SignedOut>
             <SignInButton mode="modal">
+              {/* Reduced text size on small screens (text-base), kept original sm:text-lg for larger screens */}
               <Button
-                className="text-xl hover:cursor-pointer"
+                className="text-base sm:text-lg hover:cursor-pointer"
                 variant="default"
               >
                 Sign in
               </Button>
             </SignInButton>
           </SignedOut>
+
           <SignedIn>
             <SignOutButton>
+              {/* Reduced text size on small screens (text-base), kept original sm:text-lg for larger screens */}
               <Button
-                className="text-xl hover:cursor-pointer"
+                className="text-base sm:text-lg hover:cursor-pointer"
                 variant="outline"
               >
                 Sign out
