@@ -37,7 +37,7 @@ Example format: \
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-export async function getRecipeFromChefClaude(ingredientsArr: string[]) {
+export async function getRecipeFromIngredients(ingredientsArr: string[]) {
   const ingredientsString = ingredientsArr.join(", ");
 
   const msg = await anthropic.messages.create({
@@ -48,6 +48,34 @@ export async function getRecipeFromChefClaude(ingredientsArr: string[]) {
       {
         role: "user",
         content: `I have ${ingredientsString}. Please give me a recipe you'd recommend I make!`,
+      },
+    ],
+  });
+  return msg.content[0];
+}
+
+export async function getRecipeFromImage(image: string) {
+  const msg = await anthropic.messages.create({
+    model: "claude-3-haiku-20240307",
+    max_tokens: 1024,
+    system: SYSTEM_PROMPT,
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: "image/jpeg",
+              data: image, // Base64-encoded image data as string
+            },
+          },
+          {
+            type: "text",
+            text: "This is a picture of my fridge, I want to use the ingredients in here to make a meal. Please give me a recipe you'd recommend I make!",
+          },
+        ],
       },
     ],
   });

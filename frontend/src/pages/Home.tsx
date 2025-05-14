@@ -4,20 +4,36 @@ import Recipe from "@/components/Recipe";
 import SendPrompt from "@/components/SendPrompt";
 import { useRecipeContext } from "@/context/AppContext";
 import { smoothScrollTo } from "@/utils/utils";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import FileUploader from "@/components/FileUploader";
+import NewRecipeButton from "@/components/NewRecipe";
 
 export default function Home() {
   const { ingredients, recipe } = useRecipeContext();
   const enoughIngredients = ingredients.length >= 4;
-  const recipeSection = useRef<null | HTMLDivElement>(null);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
+  // Callback ref pattern - more reliable than useRef for this case
+  const scrollToRecipe = useCallback(
+    (node: HTMLDivElement | null) => {
+      // This function runs whenever the ref is attached
+      if (node && recipe && !hasScrolled) {
+        // Add a small delay to ensure rendering is complete
+        setTimeout(() => {
+          const top = node.getBoundingClientRect().top + window.scrollY;
+          smoothScrollTo(top, 1000);
+          setHasScrolled(true);
+        }, 100);
+      }
+    },
+    [recipe, hasScrolled]
+  );
+
+  // Reset scroll flag when recipe changes
   useEffect(() => {
-    if (recipeSection.current && recipe) {
-      const top =
-        recipeSection.current.getBoundingClientRect().top + window.scrollY;
-      smoothScrollTo(top, 1000); // Scroll to the recipe over 1 second
+    if (!recipe) {
+      setHasScrolled(false);
     }
   }, [recipe]);
 
@@ -42,21 +58,22 @@ export default function Home() {
           </TabsTrigger>
         </TabsList>
 
+        {/* by image */}
         <TabsContent value="image" className="p-4 rounded-b-lg">
           <FileUploader />
         </TabsContent>
 
+        {/* by ingredient */}
         <TabsContent value="manual" className="p-4 rounded-b-lg">
           <IngredientForm />
           <IngredientsList />
         </TabsContent>
       </Tabs>
 
-      {/* <FileUploader /> */}
-
       {enoughIngredients && <SendPrompt />}
+
       {recipe && (
-        <div ref={recipeSection}>
+        <div ref={scrollToRecipe}>
           <Recipe />
         </div>
       )}

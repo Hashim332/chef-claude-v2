@@ -1,16 +1,10 @@
 import express from "express";
-import { getRecipeFromChefClaude } from "../src/claudePrompt";
+import { getRecipeFromIngredients } from "../src/claudePrompt";
+import { Recipe } from "../backend-utils";
 
 const router = express.Router();
 
 router.use(express.json());
-
-export type Recipe = {
-  recipeId?: string;
-  recipeName: string;
-  quickSummary: string;
-  fullRecipe: string;
-};
 
 router.post("/generate/by-ingredients", async (req, res) => {
   const { ingredients } = req.body;
@@ -23,7 +17,8 @@ router.post("/generate/by-ingredients", async (req, res) => {
   }
 
   try {
-    const recipe = await getRecipeFromChefClaude(ingredients);
+    const recipe = await getRecipeFromIngredients(ingredients);
+    console.log(recipe);
     // text is a part of the content block recieved from claude which is being parsed to form an valid JS object
     if (recipe.type === "text") {
       const recipeObject = JSON.parse(recipe.text);

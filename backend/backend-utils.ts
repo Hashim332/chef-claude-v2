@@ -15,3 +15,10 @@ export function cleanAndParseRecipe(rawText: string) {
     return null;
   }
 }
+
+export type Recipe = {
+  recipeId?: string;
+  recipeName: string;
+  quickSummary: string;
+  fullRecipe: string;
+};
