@@ -5,6 +5,7 @@ import { clerkMiddleware, getAuth } from "@clerk/express";
 import byIngredients from "../routes/by-ingredients";
 import saveRecipe from "../routes/save-recipe";
 import userRecipes from "../routes/user-recipes";
+import byImage from "../routes/by-image";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -20,6 +21,7 @@ app.get("/api", (req, res) => {
 });
 
 app.use("/api/", byIngredients);
+app.use("/api/", byImage);
 app.use("/api/", saveRecipe);
 app.use("/api/", userRecipes);
 

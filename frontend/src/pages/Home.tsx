@@ -6,6 +6,7 @@ import { useRecipeContext } from "@/context/AppContext";
 import { smoothScrollTo } from "@/utils/utils";
 import { useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import FileUploader from "@/components/FileUploader";
 
 export default function Home() {
   const { ingredients, recipe } = useRecipeContext();
@@ -24,7 +25,7 @@ export default function Home() {
     <div>
       <Tabs
         defaultValue="image"
-        className="w-full max-w-md border rounded-lg shadow-md overflow-hidden m-auto my-4"
+        className="w-full max-w-xl border rounded-lg shadow-md overflow-hidden m-auto my-4"
       >
         <TabsList className="flex w-full justify-start bg-secondary/10 rounded-t-lg border-b border-gray-200 p-1">
           <TabsTrigger
@@ -42,17 +43,17 @@ export default function Home() {
         </TabsList>
 
         <TabsContent value="image" className="p-4 rounded-b-lg">
-          Make changes to your account here.
+          <FileUploader />
         </TabsContent>
 
         <TabsContent value="manual" className="p-4 rounded-b-lg">
-          Change your password here.
+          <IngredientForm />
+          <IngredientsList />
         </TabsContent>
       </Tabs>
 
-      {/* gooba */}
-      <IngredientForm />
-      <IngredientsList />
+      {/* <FileUploader /> */}
+
       {enoughIngredients && <SendPrompt />}
       {recipe && (
         <div ref={recipeSection}>
