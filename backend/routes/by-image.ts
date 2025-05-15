@@ -10,7 +10,7 @@ router.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 7MB limit
+  limits: { fileSize: 20 * 1024 * 1024 }, // 7MB limit
   fileFilter: (req, file, cb) => {
     // Accept only image files
     if (file.mimetype.startsWith("image/")) {
@@ -41,7 +41,7 @@ router.post("/generate/by-image", upload.single("image"), async (req, res) => {
     // Access the file buffer
     let imageBuffer = req.file.buffer;
 
-    const MAX_SAFE_BUFFER_SIZE = Math.floor((5 * 1024 * 1024) / 1.37); // ~3.6MB
+    const MAX_SAFE_BUFFER_SIZE = Math.floor((5 * 1024 * 1024) / 2); // compress image due to base64 adding 33% size
     imageBuffer = await compressImage(imageBuffer, MAX_SAFE_BUFFER_SIZE);
 
     const base64Image = imageBuffer.toString("base64");
