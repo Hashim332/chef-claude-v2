@@ -17,7 +17,7 @@ export default function SaveRecipeButton() {
     console.log("Attempting to fetch from:", import.meta.env.VITE_API_URL);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/save-recipe`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/save-recipe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,8 +25,6 @@ export default function SaveRecipeButton() {
         },
         body: JSON.stringify({ recipe: recipe }),
       });
-
-      const data = await res.json();
     } catch (err) {
       console.error("There was an issue with the backend request --->", err);
     }
