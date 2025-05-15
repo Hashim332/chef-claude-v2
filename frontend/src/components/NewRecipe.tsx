@@ -8,7 +8,7 @@ export default function NewRecipeButton() {
     <Button
       onClick={resetAll}
       variant="outline"
-      className="text-xl hover:cursor-pointer"
+      className="text-xl hover:cursor-pointer w-[40%] sm:w-[50%]"
     >
       New Recipe
     </Button>

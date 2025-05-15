@@ -37,7 +37,7 @@ export default function SaveRecipeButton() {
   return (
     <Button
       onClick={SaveRecipe}
-      className="text-xl hover:cursor-pointer"
+      className="text-xl hover:cursor-pointer w-[40%] sm:w-[50%]"
       disabled={buttonOff}
     >
       Save Recipe
