@@ -20,7 +20,10 @@ export default function SavedRecipeCard({
   const [showRecipe, setShowRecipe] = useState(false);
   const { getToken } = useAuth();
 
-  async function deleteRecipe(recipeId: string | undefined) {
+  if (!recipe.recipeId) return null;
+  const recipeId = recipe.recipeId;
+
+  async function deleteRecipe(recipeId: string) {
     if (recipeId === undefined) {
       return;
     }
@@ -53,7 +56,6 @@ export default function SavedRecipeCard({
     <section>
       <div className="my-4 w-full rounded-md sm:p-4 flex justify-between items-center">
         <div
-          key={recipe.recipeId}
           onClick={() => setShowRecipe(true)}
           className="flex flex-col border hover:bg-secondary/10 rounded-md p-2 w-full cursor-pointer transition-colors"
         >
@@ -65,7 +67,7 @@ export default function SavedRecipeCard({
           className="ml-4 bg-tertiary text-secondary border hover:bg-red-500 hover:cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
-            deleteRecipe(recipe.recipeId);
+            deleteRecipe(recipeId);
           }}
         >
           <Trash2 />

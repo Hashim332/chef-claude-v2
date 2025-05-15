@@ -78,9 +78,9 @@ export default function FileUploader() {
   }, [preview]);
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <div>
-        <h1 className="text-3xl my-4">
+        <h1 className="text-4xl mb-4">
           Upload a picture of your ingredients to get a recipe!
         </h1>
         <label

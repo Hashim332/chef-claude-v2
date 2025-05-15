@@ -37,6 +37,7 @@ export default function YourRecipes() {
   const recipeCards = savedRecipes.map((recipeObj) => {
     return (
       <SavedRecipeCard
+        key={recipeObj.recipeId}
         savedRecipes={savedRecipes}
         setSavedRecipes={setSavedRecipes}
         recipe={recipeObj}

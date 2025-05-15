@@ -46,11 +46,11 @@ export default function IngredientForm() {
   }
 
   return (
-    <div className=" flex flex-col items-center gap-5 sm:mb-12">
+    <div className=" flex flex-col items-center gap-4 sm:mb-12">
       <h1 className="text-3xl md:text-4xl">
         Enter some ingredients to get a recipe
       </h1>
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full justify-center">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full justify-center">
         <div className="relative">
           <Input
             value={input}
