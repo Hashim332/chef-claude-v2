@@ -74,10 +74,9 @@ export default function SavedRecipeCard({
 
       {showRecipe && (
         <RecipeModal
-          key={recipe.recipeName}
+          key={recipe.recipeId}
           closeModal={() => setShowRecipe(false)}
-          recipeName={recipe.recipeName}
-          fullRecipe={recipe.fullRecipe}
+          recipe={recipe}
           deleteRecipe={deleteRecipe}
         />
       )}
