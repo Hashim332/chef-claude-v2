@@ -5,14 +5,13 @@ export default function Footer() {
     <footer className="bg-background border-t border-border py-3 w-full">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Developer Info with smaller, lighter text */}
           <div>
             <span className="text-sm text-muted-foreground">
               By: Hashim Rafiq
             </span>
           </div>
 
-          {/* Social Links - Now in the middle */}
+          {/* Social Links */}
           <div className="flex space-x-4 items-center">
             {/* GitHub Icon */}
             <a

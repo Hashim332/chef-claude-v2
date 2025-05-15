@@ -80,6 +80,10 @@ export default function FileUploader() {
   return (
     <div className="space-y-4">
       <div>
+        <h1 className="text-3xl my-4">
+          Upload a picture of your fridge and get a recipe based on your
+          ingredients!
+        </h1>
         <label
           htmlFor="file-upload"
           className="flex flex-col items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-blue-500 transition duration-200 ease-in-out text-center"

@@ -38,9 +38,10 @@ export default function SavedRecipeCard({
       );
       // waiting for validated delete and deleteing on client
       if (res.status === 200) {
-        const updatedRecipes = savedRecipes.filter((recipe) => {
-          recipe.recipeId !== recipeId;
-        });
+        const updatedRecipes = savedRecipes.filter(
+          (recipe) => recipe.recipeId !== recipeId
+        );
+
         setSavedRecipes(updatedRecipes);
       }
     } catch (err) {
@@ -63,7 +64,7 @@ export default function SavedRecipeCard({
         <Button
           className="ml-4 bg-tertiary text-secondary border hover:bg-red-500 hover:cursor-pointer"
           onClick={(e) => {
-            e.stopPropagation(); // still good practice
+            e.stopPropagation();
             deleteRecipe(recipe.recipeId);
           }}
         >

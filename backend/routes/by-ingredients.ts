@@ -1,6 +1,5 @@
 import express from "express";
 import { getRecipeFromIngredients } from "../src/claudePrompt";
-import { Recipe } from "../backend-utils";
 
 const router = express.Router();
 

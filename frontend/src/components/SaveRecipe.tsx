@@ -13,7 +13,6 @@ export default function SaveRecipeButton() {
       setSavedRecipes((prevSavedRecipes) => [...prevSavedRecipes, recipe]);
     setButtonOff(true);
 
-    // FIXME:
     const token = await getToken();
     console.log("Attempting to fetch from:", import.meta.env.VITE_API_URL);
 

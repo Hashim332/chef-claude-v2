@@ -7,7 +7,6 @@ import { smoothScrollTo } from "@/utils/utils";
 import { useCallback, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import FileUploader from "@/components/FileUploader";
-import NewRecipeButton from "@/components/NewRecipe";
 
 export default function Home() {
   const { ingredients, recipe } = useRecipeContext();
