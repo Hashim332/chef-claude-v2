@@ -50,10 +50,10 @@ export default function Home() {
             Image
           </TabsTrigger>
           <TabsTrigger
-            value="manual"
+            value="ingredients"
             className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=active]:rounded-md data-[state=inactive]:bg-transparent data-[state=inactive]:text-gray-600 data-[state=inactive]:shadow-none transition-all py-2 px-4 text-sm font-medium m-1"
           >
-            Manual
+            Ingredients
           </TabsTrigger>
         </TabsList>
 
@@ -63,7 +63,7 @@ export default function Home() {
         </TabsContent>
 
         {/* by ingredient */}
-        <TabsContent value="manual" className="p-4 rounded-b-lg">
+        <TabsContent value="ingredients" className="p-4 rounded-b-lg">
           <IngredientForm />
           <IngredientsList />
         </TabsContent>

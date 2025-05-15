@@ -81,8 +81,7 @@ export default function FileUploader() {
     <div className="space-y-4">
       <div>
         <h1 className="text-3xl my-4">
-          Upload a picture of your fridge and get a recipe based on your
-          ingredients!
+          Upload a picture of your ingredients to get a recipe!
         </h1>
         <label
           htmlFor="file-upload"
