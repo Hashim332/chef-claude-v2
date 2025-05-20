@@ -11,7 +11,7 @@ class ImageProcessingError extends Error {
   }
 }
 
-router.use(express.json());
+// router.use(express.json());
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -85,8 +85,14 @@ router.post("/generate/by-image", upload.single("image"), async (req, res) => {
       const recipeObject = JSON.parse(recipe.text);
       res.status(200).json(recipeObject);
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error("server error", err);
+
+    const status = err.status || 500;
+    const code = err.code || "INTERNAL_SERVER_ERROR";
+    const message = err.message || "Something went wrong";
+
+    res.status(status).json({ code, error: message });
   }
 });
 

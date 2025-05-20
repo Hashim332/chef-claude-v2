@@ -5,7 +5,7 @@ import { ensureJpeg, processJpeg } from "../backend-utils";
 const router = express.Router();
 
 // Parse JSON bodies (not strictly needed for binary preview but kept for consistency)
-router.use(express.json());
+// router.use(express.json());
 
 // Multer setup: in-memory storage, file size limit, image-only filter
 const storage = multer.memoryStorage();
@@ -27,6 +27,9 @@ const upload = multer({
  */
 router.post("/preview", upload.single("image"), async (req, res) => {
   try {
+    console.log("Hit /api/preview route");
+    console.log("Headers:", req.headers);
+    console.log("Body:", req.body);
     if (!req.file) {
       res.status(400).json({
         error: "NO_FILE_UPLOADED",
