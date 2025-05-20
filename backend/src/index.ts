@@ -10,8 +10,17 @@ import preview from "../routes/preview";
 
 const app = express();
 const port = process.env.PORT || 8000;
+const allowedOrigins = [
+  "http://localhost:5173", // dev
+  "https://frontend-production-0a74.up.railway.app", // prod
+];
 
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // if you're using cookies/auth
+  })
+);
 app.use(express.json());
 
 app.get("/api", (req, res) => {
