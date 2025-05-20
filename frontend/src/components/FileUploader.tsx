@@ -3,7 +3,6 @@ import { Button } from "./ui/button";
 import axios from "axios";
 import { ArrowRight, Upload, X } from "lucide-react";
 import { useRecipeContext } from "@/context/AppContext";
-import heic2any from "heic2any";
 
 type UploadStatus = "idle" | "uploading" | "success" | "error";
 
