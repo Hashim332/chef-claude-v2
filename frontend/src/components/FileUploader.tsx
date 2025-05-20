@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, use, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { ArrowRight, Upload, X } from "lucide-react";
@@ -13,26 +13,42 @@ export default function FileUploader() {
   const inputRef = useRef<HTMLInputElement | null>(null); // <-- file input ref
   const [status, setStatus] = useState<UploadStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  // const [error, setError] = useState<string>("");
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
+
+      // clientside filesize check
+      if (selectedFile) {
+        const maxSizeInBytes = 15 * 1024 * 1024;
+
+        if (selectedFile.size > maxSizeInBytes) {
+          setStatus("error");
+          // setTimeout(() => setStatus("idle"), 3000);
+
+          setErrorMessage(`File is too large. Max size is 15MB.`);
+          setTimeout(() => setErrorMessage(""), 3000);
+          return;
+        }
+
+        console.log("File is within size limit:", selectedFile);
+      }
+      // size check passed
       setFile(selectedFile);
 
+      // preview handling
       if (preview) {
         URL.revokeObjectURL(preview);
       }
-
       const previewUrl = URL.createObjectURL(selectedFile);
       setPreview(previewUrl);
-
       setStatus("idle");
-      setErrorMessage("");
+      // setErrorMessage("");
     } else {
       setFile(null);
       setPreview(null);
       setStatus("idle");
-      setErrorMessage("");
     }
   }
 
@@ -40,7 +56,7 @@ export default function FileUploader() {
     if (!file) return;
 
     setStatus("uploading");
-    setErrorMessage("");
+    // setErrorMessage("");
 
     const formData = new FormData();
     formData.append("image", file);
@@ -52,13 +68,31 @@ export default function FileUploader() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
+      // axios res is slightly diffrent to built in, using res.data as per docs
       setStatus("success");
       setRecipe(res.data);
     } catch (err: any) {
       setStatus("error");
-      setErrorMessage(
-        err.response?.data?.error || err.message || "Failed to upload image"
-      );
+
+      // Try to extract meaningful info from API response
+      const apiError = err.response?.data;
+      let message = "Failed to upload image";
+
+      if (apiError) {
+        if (apiError.error && apiError.code) {
+          // Format with code and message
+          message = `${apiError.code}: ${apiError.error}`;
+        } else if (apiError.error) {
+          message = apiError.error;
+        } else if (typeof apiError === "string") {
+          message = apiError;
+        }
+      } else if (err.message) {
+        message = err.message;
+      }
+
+      setErrorMessage(message);
+      setTimeout(() => setErrorMessage(""), 3000);
     }
   }
 
@@ -76,6 +110,9 @@ export default function FileUploader() {
       }
     };
   }, [preview]);
+
+  console.log("error message -->", errorMessage);
+  console.log("status -->", status);
 
   return (
     <div className="">
@@ -155,12 +192,9 @@ export default function FileUploader() {
           )}
         </Button>
       )}
-
-      {status === "error" && (
-        <div className="text-red-600 text-sm mt-2 text-center">
-          <p>Error: {errorMessage || "Failed to process image"}</p>
-        </div>
-      )}
+      <div className="text-red-600 text-sm mt-2 text-center">
+        {status === "error" && <p>{errorMessage}</p>}
+      </div>
     </div>
   );
 }

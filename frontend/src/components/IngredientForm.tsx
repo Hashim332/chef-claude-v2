@@ -54,6 +54,7 @@ export default function IngredientForm() {
         <div className="relative">
           <Input
             value={input}
+            maxLength={20}
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             placeholder="e.g Pasta"
