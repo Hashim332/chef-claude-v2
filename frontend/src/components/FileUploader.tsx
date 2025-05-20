@@ -1,8 +1,9 @@
-import { ChangeEvent, use, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { ArrowRight, Upload, X } from "lucide-react";
 import { useRecipeContext } from "@/context/AppContext";
+import heic2any from "heic2any";
 
 type UploadStatus = "idle" | "uploading" | "success" | "error";
 
@@ -15,7 +16,7 @@ export default function FileUploader() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   // const [error, setError] = useState<string>("");
 
-  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
 
@@ -36,6 +37,31 @@ export default function FileUploader() {
       }
       // size check passed
       setFile(selectedFile);
+
+      // If HEIC, ask the server to convert & resize for preview
+      const isHeic =
+        selectedFile.type === "image/heic" ||
+        /\.heic$/i.test(selectedFile.name);
+      if (isHeic) {
+        const form = new FormData();
+        form.append("image", selectedFile);
+        try {
+          const resp = await fetch(`${import.meta.env.VITE_API_URL}/preview`, {
+            method: "POST",
+            body: form,
+          });
+          if (!resp.ok) throw new Error("Preview conversion failed");
+          const blob = await resp.blob(); // JPEG blob
+          const url = URL.createObjectURL(blob);
+          if (preview) URL.revokeObjectURL(preview);
+          setPreview(url);
+          return;
+        } catch (err) {
+          console.error(err);
+          setErrorMessage("Could not preview HEIC; please upload JPG/PNG.");
+          return;
+        }
+      }
 
       // preview handling
       if (preview) {

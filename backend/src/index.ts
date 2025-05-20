@@ -6,6 +6,7 @@ import byIngredients from "../routes/by-ingredients";
 import saveRecipe from "../routes/save-recipe";
 import userRecipes from "../routes/user-recipes";
 import byImage from "../routes/by-image";
+import preview from "../routes/preview";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -24,6 +25,7 @@ app.use("/api/", byIngredients);
 app.use("/api/", byImage);
 app.use("/api/", saveRecipe);
 app.use("/api/", userRecipes);
+app.use("/api/", preview);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
