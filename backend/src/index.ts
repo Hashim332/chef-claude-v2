@@ -15,10 +15,19 @@ const allowedOrigins = [
   "https://frontend-production-0a74.up.railway.app", // prod
 ];
 
+// CORS: allow your frontend domain
+
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true, // if you're using cookies/auth
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
 app.use(express.json());
