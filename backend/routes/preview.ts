@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { ensureJpeg } from "../backend-utils";
+import { ensureJpeg, processJpeg } from "../backend-utils";
 
 const router = express.Router();
 
