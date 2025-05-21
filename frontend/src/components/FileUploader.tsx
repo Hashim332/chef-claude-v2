@@ -45,12 +45,12 @@ export default function FileUploader() {
         const form = new FormData();
         form.append("image", selectedFile);
         try {
-          const resp = await fetch(`${import.meta.env.VITE_API_URL}/preview`, {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/preview`, {
             method: "POST",
             body: form,
           });
-          if (!resp.ok) throw new Error("Preview conversion failed");
-          const blob = await resp.blob(); // JPEG blob
+          if (!res.ok) throw new Error("Preview conversion failed");
+          const blob = await res.blob(); // JPEG blob
           const url = URL.createObjectURL(blob);
           if (preview) URL.revokeObjectURL(preview);
           setPreview(url);
