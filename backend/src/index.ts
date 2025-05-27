@@ -30,28 +30,44 @@ app.get("/api", (req, res) => {
   res.status(200).json({ message: "API is running!" });
 });
 
-// Import routes with error handling
-try {
-  const byIngredients = require("../routes/by-ingredients");
-  const byImage = require("../routes/by-image");
-  const preview = require("../routes/preview");
-  const saveRecipe = require("../routes/save-recipe");
-  const userRecipes = require("../routes/user-recipes");
+// Import and validate routes one by one
+const routes = [
+  { name: "byIngredients", path: "../routes/by-ingredients" },
+  { name: "byImage", path: "../routes/by-image" },
+  { name: "preview", path: "../routes/preview" },
+  { name: "saveRecipe", path: "../routes/save-recipe" },
+  { name: "userRecipes", path: "../routes/user-recipes" },
+];
 
-  // Public routes
-  app.use("/api", byIngredients);
-  app.use("/api", byImage);
-  app.use("/api", preview);
+const loadedRoutes: any = {};
 
-  // Protected routes
-  app.use("/api", clerkMiddleware(), saveRecipe);
-  app.use("/api", clerkMiddleware(), userRecipes);
+routes.forEach(({ name, path }) => {
+  try {
+    const route = require(path);
+    if (
+      typeof route === "function" ||
+      (route && typeof route.default === "function")
+    ) {
+      loadedRoutes[name] = route.default || route;
+      console.log(`✓ Loaded route: ${name}`);
+    } else {
+      console.error(`✗ Route ${name} is not a function:`, typeof route);
+    }
+  } catch (error: any) {
+    console.error(`✗ Failed to load route ${name}:`, error.message);
+  }
+});
 
-  console.log("All routes loaded successfully");
-} catch (error) {
-  console.error("Route loading error:", error);
-  // Continue running with basic functionality
-}
+// Apply routes safely
+if (loadedRoutes.byIngredients) app.use("/api", loadedRoutes.byIngredients);
+if (loadedRoutes.byImage) app.use("/api", loadedRoutes.byImage);
+if (loadedRoutes.preview) app.use("/api", loadedRoutes.preview);
+
+// Protected routes
+if (loadedRoutes.saveRecipe)
+  app.use("/api", clerkMiddleware(), loadedRoutes.saveRecipe);
+if (loadedRoutes.userRecipes)
+  app.use("/api", clerkMiddleware(), loadedRoutes.userRecipes);
 
 // Error handlers
 process.on("uncaughtException", (error) => {
