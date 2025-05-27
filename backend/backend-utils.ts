@@ -35,10 +35,49 @@ export interface CompressOptions {
   maxHeight?: number;
 }
 
+// /**
+//  * Ensures the input buffer is a JPEG image.
+//  * Converts HEIC, PNG, WEBP, etc., to JPEG.
+//  * If input is already JPEG, it's returned as is.
+//  * @param inputBuffer The raw image buffer.
+//  * @returns A Promise resolving to an object with the JPEG buffer and its metadata.
+//  */
+// export async function ensureJpeg(
+//   inputBuffer: Buffer
+// ): Promise<{ jpegBuffer: Buffer; metadata: sharp.Metadata }> {
+//   let sharpInstance = sharp(inputBuffer);
+//   let metadata: sharp.Metadata;
+
+//   try {
+//     metadata = await sharpInstance.metadata();
+//     console.log(metadata);
+
+//     if (metadata.format && metadata.format === "jpeg") {
+//       return { jpegBuffer: inputBuffer, metadata };
+//     }
+
+//     if (metadata.format && metadata.format === "heif") {
+//       const convert = require("heic-convert");
+//       const outputBuffer = await convert({
+//         buffer: inputBuffer,
+//         format: "JPEG",
+//         quality: 1,
+//       });
+//       return { jpegBuffer: outputBuffer, metadata };
+//     }
+
+//     // if none of the  conditions are met, throw error
+//     throw new Error(`Unsupported image format: ${metadata.format}`);
+//   } catch (err) {
+//     console.error("error while running ensureJpeg: ", err);
+//     throw err; // Re-throw the error to maintain the Promise rejection
+//   }
+// }
+
 /**
  * Ensures the input buffer is a JPEG image.
- * Converts HEIC, PNG, WEBP, etc., to JPEG.
- * If input is already JPEG, it's returned as is.
+ * Converts HEIC, PNG, WEBP, etc., to JPEG with memory-safe processing.
+ * Automatically resizes large images to prevent memory issues.
  * @param inputBuffer The raw image buffer.
  * @returns A Promise resolving to an object with the JPEG buffer and its metadata.
  */
@@ -46,31 +85,99 @@ export async function ensureJpeg(
   inputBuffer: Buffer
 ): Promise<{ jpegBuffer: Buffer; metadata: sharp.Metadata }> {
   let sharpInstance = sharp(inputBuffer);
-  let metadata: sharp.Metadata;
+  let metadata: sharp.Metadata | undefined;
 
   try {
     metadata = await sharpInstance.metadata();
-    console.log(metadata);
+    console.log("Original metadata:", metadata);
 
-    if (metadata.format && metadata.format === "jpeg") {
+    if (
+      metadata.format === "jpeg" &&
+      metadata.width &&
+      metadata.height &&
+      metadata.width * metadata.height < 4000000
+    ) {
       return { jpegBuffer: inputBuffer, metadata };
     }
 
-    if (metadata.format && metadata.format === "heif") {
-      const convert = require("heic-convert");
-      const outputBuffer = await convert({
-        buffer: inputBuffer,
-        format: "JPEG",
-        quality: 1,
-      });
-      return { jpegBuffer: outputBuffer, metadata };
+    if (metadata.format === "heif") {
+      console.log("Converting HEIF using Sharp...");
+      let pipeline = sharp(inputBuffer);
+
+      if (metadata.width && metadata.height) {
+        const totalPixels = metadata.width * metadata.height;
+        if (totalPixels > 4000000) {
+          const scale = Math.sqrt(4000000 / totalPixels);
+          const newWidth = Math.round(metadata.width * scale);
+          const newHeight = Math.round(metadata.height * scale);
+          console.log(
+            `Resizing from ${metadata.width}x${metadata.height} to ${newWidth}x${newHeight}`
+          );
+          pipeline = pipeline.resize(newWidth, newHeight, {
+            fit: "inside",
+            withoutEnlargement: true,
+          });
+        }
+      }
+
+      const jpegBuffer = await pipeline
+        .jpeg({ quality: 85, progressive: true })
+        .toBuffer();
+      console.log(
+        `HEIF conversion complete. Output size: ${jpegBuffer.length} bytes`
+      );
+      return { jpegBuffer, metadata };
     }
 
-    // if none of the  conditions are met, throw error
+    if (
+      metadata.format &&
+      ["png", "webp", "tiff", "gif"].includes(metadata.format)
+    ) {
+      console.log(`Converting ${metadata.format} using Sharp...`);
+      let pipeline = sharp(inputBuffer);
+
+      if (metadata.width && metadata.height) {
+        const totalPixels = metadata.width * metadata.height;
+        if (totalPixels > 4000000) {
+          const scale = Math.sqrt(4000000 / totalPixels);
+          const newWidth = Math.round(metadata.width * scale);
+          const newHeight = Math.round(metadata.height * scale);
+          console.log(
+            `Resizing from ${metadata.width}x${metadata.height} to ${newWidth}x${newHeight}`
+          );
+          pipeline = pipeline.resize(newWidth, newHeight, {
+            fit: "inside",
+            withoutEnlargement: true,
+          });
+        }
+      }
+
+      const jpegBuffer = await pipeline
+        .jpeg({ quality: 85, progressive: true })
+        .toBuffer();
+      console.log(
+        `${metadata.format} conversion complete. Output size: ${jpegBuffer.length} bytes`
+      );
+      return { jpegBuffer, metadata };
+    }
+
     throw new Error(`Unsupported image format: ${metadata.format}`);
-  } catch (err) {
-    console.error("error while running ensureJpeg: ", err);
-    throw err; // Re-throw the error to maintain the Promise rejection
+  } catch (err: any) {
+    console.error("Error in ensureJpeg:", err.message);
+
+    try {
+      console.log("Attempting fallback conversion with Sharp...");
+      const jpegBuffer = await sharp(inputBuffer)
+        .resize(2000, 2000, { fit: "inside", withoutEnlargement: true })
+        .jpeg({ quality: 80 })
+        .toBuffer();
+
+      console.log("Fallback conversion successful");
+      return { jpegBuffer, metadata: metadata ?? ({} as sharp.Metadata) };
+    } catch (fallbackErr: any) {
+      console.error("Fallback conversion also failed:", fallbackErr.message);
+      throw new Error(`Image conversion failed: ${err.message}`);
+    }
   }
 }
 

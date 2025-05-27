@@ -3,8 +3,16 @@ import { Button } from "./ui/button";
 import axios from "axios";
 import { ArrowRight, Upload, X } from "lucide-react";
 import { useRecipeContext } from "@/context/AppContext";
+import heic2any from "heic2any";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
-type UploadStatus = "idle" | "uploading" | "success" | "error";
+type UploadStatus =
+  | "idle"
+  | "uploading"
+  | "success"
+  | "error"
+  | "filetypeerror";
 
 export default function FileUploader() {
   const { file, setFile, preview, setPreview, setRecipe, recipe } =
@@ -21,13 +29,13 @@ export default function FileUploader() {
 
       // clientside filesize check
       if (selectedFile) {
-        const maxSizeInBytes = 15 * 1024 * 1024;
+        const maxSizeInBytes = 10 * 1024 * 1024;
 
         if (selectedFile.size > maxSizeInBytes) {
           setStatus("error");
           // setTimeout(() => setStatus("idle"), 3000);
 
-          setErrorMessage(`File is too large. Max size is 15MB.`);
+          setErrorMessage(`File is too large. Max size is 10MB.`);
           setTimeout(() => setErrorMessage(""), 3000);
           return;
         }
@@ -42,22 +50,47 @@ export default function FileUploader() {
         selectedFile.type === "image/heic" ||
         /\.heic$/i.test(selectedFile.name);
       if (isHeic) {
-        const form = new FormData();
-        form.append("image", selectedFile);
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/preview`, {
-            method: "POST",
-            body: form,
+          const convertedBlob = await heic2any({
+            blob: selectedFile,
+            toType: "image/jpeg",
+            quality: 0.8,
           });
-          if (!res.ok) throw new Error("Preview conversion failed");
-          const blob = await res.blob(); // JPEG blob
+
+          const blob = Array.isArray(convertedBlob)
+            ? convertedBlob[0]
+            : convertedBlob;
+
           const url = URL.createObjectURL(blob);
           if (preview) URL.revokeObjectURL(preview);
           setPreview(url);
+          setFile(
+            new File([blob], selectedFile.name.replace(/\.heic$/i, ".jpg"), {
+              type: "image/jpeg",
+            })
+          );
           return;
         } catch (err) {
-          console.error(err);
-          setErrorMessage("Could not preview HEIC; please upload JPG/PNG.");
+          console.error("Client-side HEIC conversion failed:", err);
+          setStatus("filetypeerror");
+          setErrorMessage(
+            "Could not convert HEIC. Try a different image or save as JPG/PNG."
+          );
+          toast(
+            <>
+              HEIC format is not supported. Please{" "}
+              <a
+                href="https://heic.online"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                convert your image
+              </a>{" "}
+              to JPG or PNG.
+            </>
+          );
+
           return;
         }
       }
@@ -161,7 +194,7 @@ export default function FileUploader() {
                 and drop
               </p>
               <p className="text-xs text-gray-500">
-                JPG, PNG, or GIF (Max 5MB)
+                JPG, PNG, or GIF (Max 10MB)
               </p>
             </>
           )}
@@ -220,6 +253,7 @@ export default function FileUploader() {
       <div className="text-red-600 text-sm mt-2 text-center">
         {status === "error" && <p>{errorMessage}</p>}
       </div>
+      <Toaster />
     </div>
   );
 }

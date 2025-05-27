@@ -4,14 +4,14 @@ import { ensureJpeg, processJpeg } from "../backend-utils";
 
 const router = express.Router();
 
-// Parse JSON bodies (not strictly needed for binary preview but kept for consistency)
-// router.use(express.json());
-
-// Multer setup: in-memory storage, file size limit, image-only filter
+// Multer setup with stricter limits for Railway
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
-  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB
+  limits: {
+    fileSize: 10 * 1024 * 1024, // Reduced to 10MB for Railway
+    files: 1,
+  },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
@@ -26,10 +26,13 @@ const upload = multer({
  * Converts uploaded image (including HEIC/PNG/WebP) to JPEG and returns it directly.
  */
 router.post("/preview", upload.single("image"), async (req, res) => {
+  let processingStartTime = Date.now();
+
   try {
     console.log("Hit /api/preview route");
-    console.log("Headers:", req.headers);
-    console.log("Body:", req.body);
+    console.log(`File size: ${req.file?.size} bytes`);
+    console.log(`File type: ${req.file?.mimetype}`);
+
     if (!req.file) {
       res.status(400).json({
         error: "NO_FILE_UPLOADED",
@@ -38,21 +41,50 @@ router.post("/preview", upload.single("image"), async (req, res) => {
       return;
     }
 
-    // Step: Ensure JPEG format (HEIC/PNG/WebP -> JPEG)
-    const { jpegBuffer } = await ensureJpeg(req.file.buffer);
+    // Check file size in memory
+    if (req.file.size > 10 * 1024 * 1024) {
+      res.status(413).json({
+        error: "FILE_TOO_LARGE",
+        message: "Image file must be under 10MB.",
+      });
+      return;
+    }
 
-    // Return the converted JPEG without resizing
-    res.set("Content-Type", "image/jpeg");
-    res.send(jpegBuffer);
-    return;
-  } catch (err: any) {
-    console.error("Preview conversion error:", err);
-    res.status(500).json({
-      error: "PREVIEW_ERROR",
-      message: err.message || "Failed to generate preview.",
+    console.log("Starting image conversion...");
+
+    // Add timeout wrapper for ensureJpeg
+    const conversionPromise = ensureJpeg(req.file.buffer);
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Image conversion timeout")), 25000);
     });
+
+    const { jpegBuffer } = (await Promise.race([
+      conversionPromise,
+      timeoutPromise,
+    ])) as any;
+
+    const processingTime = Date.now() - processingStartTime;
+    console.log(`Image conversion completed in ${processingTime}ms`);
+    console.log(`Output JPEG size: ${jpegBuffer.length} bytes`);
+
+    // Return the converted JPEG
+    res.set("Content-Type", "image/jpeg");
+    res.set("Content-Length", jpegBuffer.length.toString());
+    res.send(jpegBuffer);
+  } catch (err: any) {
+    const processingTime = Date.now() - processingStartTime;
+    console.error(
+      `Preview conversion error after ${processingTime}ms:`,
+      err.message
+    );
+
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: "PREVIEW_ERROR",
+        message: err.message || "Failed to generate preview.",
+      });
+    }
   }
-  return;
 });
 
 export default router;
