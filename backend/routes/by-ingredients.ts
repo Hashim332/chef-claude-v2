@@ -27,7 +27,10 @@ router.post("/generate/by-ingredients", async (req, res) => {
     console.error("Server error:", err);
     res
       .status(500)
-      .json({ error: "An unexpected error occurred on the server." });
+      .json({
+        error:
+          "An unexpected error occurred on the server on the by-ingredients route",
+      });
     return;
   }
 });
