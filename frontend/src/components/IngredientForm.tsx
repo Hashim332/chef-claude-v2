@@ -30,7 +30,7 @@ export default function IngredientForm() {
       setAlert("This item is already in your list");
       setTimeout(() => setAlert(""), 3000);
     } else {
-      setIngredients((prevIngredients) => [...prevIngredients, formattedInput]);
+      setIngredients([...ingredients, formattedInput]);
       setInput("");
     }
   }
@@ -60,6 +60,7 @@ export default function IngredientForm() {
             placeholder="e.g Pasta"
             className=" md:w-xs !text-lg"
           />
+
           {alert && (
             <div className="absolute left-0 right-0 top-full mt-2 z-10">
               <div className="bg-pink-50 border border-pink-200 text-pink-700 rounded-lg px-3 py-2 shadow-md animate-in fade-in slide-in-from-top-1 duration-300">

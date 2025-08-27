@@ -3,7 +3,6 @@ import IngredientsList from "@/components/IngredientsList";
 import Recipe from "@/components/Recipe";
 import SendPrompt from "@/components/SendPrompt";
 import { useRecipeContext } from "@/context/AppContext";
-import { smoothScrollTo } from "@/utils/utils";
 import { useCallback, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import FileUploader from "@/components/FileUploader";
@@ -20,8 +19,7 @@ export default function Home() {
       if (node && recipe && !hasScrolled) {
         // Add a small delay to ensure rendering is complete
         setTimeout(() => {
-          const top = node.getBoundingClientRect().top + window.scrollY;
-          smoothScrollTo(top, 1000);
+          node.scrollIntoView({ behavior: "smooth" });
           setHasScrolled(true);
         }, 100);
       }

@@ -1,17 +1,20 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { RecipeObject } from "@/utils/utils";
 
+// changed these from React.Dispatch<React.SetStateAction<...>> to (...: ...) => void to fix type errors
+// even though React.Dispatch and .SetStateAction are more robust, the current implementation
+// is more concise and easier to understand
 type RecipeGeneratorContext = {
   ingredients: string[];
-  setIngredients: React.Dispatch<React.SetStateAction<string[]>>;
+  setIngredients: (ingredients: string[]) => void;
   recipe: RecipeObject | null;
-  setRecipe: React.Dispatch<React.SetStateAction<RecipeObject | null>>;
+  setRecipe: (recipe: RecipeObject | null) => void;
   savedRecipes: RecipeObject[];
-  setSavedRecipes: React.Dispatch<React.SetStateAction<RecipeObject[]>>;
+  setSavedRecipes: (savedRecipes: RecipeObject[]) => void;
   file: File | null;
-  setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  setFile: (file: File) => void;
   preview: string | null;
-  setPreview: React.Dispatch<React.SetStateAction<string | null>>;
+  setPreview: (preview: string) => void;
   resetAll: () => void;
 };
 
