@@ -8,7 +8,7 @@ const app = express();
 const port = parseInt(process.env.PORT || "8000", 10);
 
 const allowedOrigins = [
-  "http://localhost:5173",
+  "http://localhost:5174",
   "https://frontend-production-0a74.up.railway.app",
 ];
 
