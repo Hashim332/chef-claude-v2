@@ -2,6 +2,10 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
+import byIngredientsRoute from "../routes/by-ingredients";
+import byImageRoute from "../routes/by-image";
+import saveRecipeRoute from "../routes/save-recipe";
+import userRecipesRoute from "../routes/user-recipes";
 
 const app = express();
 // Convert port to number for express.listen()
@@ -31,44 +35,13 @@ app.get("/api", (req, res) => {
   res.status(200).json({ message: "API is running!" });
 });
 
-// Import and validate routes one by one
-const routes = [
-  { name: "byIngredients", path: "../routes/by-ingredients" },
-  { name: "byImage", path: "../routes/by-image" },
-  { name: "preview", path: "../routes/preview" },
-  { name: "saveRecipe", path: "../routes/save-recipe" },
-  { name: "userRecipes", path: "../routes/user-recipes" },
-];
-
-const loadedRoutes: any = {};
-
-routes.forEach(({ name, path }) => {
-  try {
-    const route = require(path);
-    if (
-      typeof route === "function" ||
-      (route && typeof route.default === "function")
-    ) {
-      loadedRoutes[name] = route.default || route;
-      console.log(`✓ Loaded route: ${name}`);
-    } else {
-      console.error(`✗ Route ${name} is not a function:`, typeof route);
-    }
-  } catch (error: any) {
-    console.error(`✗ Failed to load route ${name}:`, error.message);
-  }
-});
-
-// Apply routes safely
-if (loadedRoutes.byIngredients) app.use("/api", loadedRoutes.byIngredients);
-if (loadedRoutes.byImage) app.use("/api", loadedRoutes.byImage);
-if (loadedRoutes.preview) app.use("/api", loadedRoutes.preview);
+// Apply routes
+app.use("/api", byIngredientsRoute);
+app.use("/api", byImageRoute);
 
 // Protected routes
-if (loadedRoutes.saveRecipe)
-  app.use("/api", clerkMiddleware(), loadedRoutes.saveRecipe);
-if (loadedRoutes.userRecipes)
-  app.use("/api", clerkMiddleware(), loadedRoutes.userRecipes);
+app.use("/api", clerkMiddleware(), saveRecipeRoute);
+app.use("/api", clerkMiddleware(), userRecipesRoute);
 
 // Error handlers
 process.on("uncaughtException", (error) => {
