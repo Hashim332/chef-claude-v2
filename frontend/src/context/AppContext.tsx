@@ -6,15 +6,15 @@ import { RecipeObject } from "@/utils/utils";
 // is more concise and easier to understand
 type RecipeGeneratorContext = {
   ingredients: string[];
-  setIngredients: (ingredients: string[]) => void;
+  setIngredients: React.Dispatch<React.SetStateAction<string[]>>;
   recipe: RecipeObject | null;
-  setRecipe: (recipe: RecipeObject | null) => void;
+  setRecipe: React.Dispatch<React.SetStateAction<RecipeObject | null>>;
   savedRecipes: RecipeObject[];
-  setSavedRecipes: (savedRecipes: RecipeObject[]) => void;
+  setSavedRecipes: React.Dispatch<React.SetStateAction<RecipeObject[]>>;
   file: File | null;
-  setFile: (file: File) => void;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
   preview: string | null;
-  setPreview: (preview: string) => void;
+  setPreview: React.Dispatch<React.SetStateAction<string | null>>;
   resetAll: () => void;
 };
 
