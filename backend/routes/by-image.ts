@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
-import { ensureJpeg, processJpeg } from "../backend-utils";
-import { getRecipeFromImage } from "../src/claudePrompt";
+import { ensureJpeg, processJpeg } from "../utils/imageProcessing";
+import { getRecipeFromImage } from "../utils/claudePrompt";
 
 const router = express.Router();
 

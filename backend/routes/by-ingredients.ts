@@ -1,5 +1,5 @@
 import express from "express";
-import { getRecipeFromIngredients } from "../src/claudePrompt";
+import { getRecipeFromIngredients } from "../utils/claudePrompt";
 
 const router = express.Router();
 

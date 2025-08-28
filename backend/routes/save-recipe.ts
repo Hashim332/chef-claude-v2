@@ -1,8 +1,7 @@
 import express from "express";
 import { db } from "../src/firebase";
-import { addDoc, collection, setDoc, doc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { requireAuth, getAuth } from "@clerk/express";
-import { Recipe } from "../backend-utils";
 
 const router = express.Router();
 

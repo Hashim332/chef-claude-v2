@@ -1,31 +1,4 @@
 import sharp from "sharp";
-import heicConvert from "heic-convert";
-import { error } from "console";
-
-export function cleanAndParseRecipe(rawText: string) {
-  // Step 1: Replace single quotes with double quotes (only around keys/values)
-  const doubleQuoted = rawText
-    .replace(/([{,]\s*)'([^']+?)'\s*:/g, '$1"$2":') // keys
-    .replace(/:\s*'([^']+?)'/g, ': "$1"'); // simple string values
-
-  // Step 2: Remove backticks around the Full Recipe (convert to string with \n preserved)
-  const noBackticks = doubleQuoted.replace(/`/g, ""); // Optional: keep markdown if you plan to render it
-
-  // Step 3: Parse it
-  try {
-    return JSON.parse(noBackticks);
-  } catch (err) {
-    console.error("Failed to parse recipe:", err);
-    return null;
-  }
-}
-
-export type Recipe = {
-  recipeId?: string;
-  recipeName: string;
-  quickSummary: string;
-  fullRecipe: string;
-};
 
 export interface CompressOptions {
   startQuality?: number;
@@ -75,11 +48,8 @@ export interface CompressOptions {
 // }
 
 /**
- * Ensures the input buffer is a JPEG image.
- * Converts HEIC, PNG, WEBP, etc., to JPEG with memory-safe processing.
- * Automatically resizes large images to prevent memory issues.
- * @param inputBuffer The raw image buffer.
- * @returns A Promise resolving to an object with the JPEG buffer and its metadata.
+ * Convert any image format to JPEG using Sharp
+ * Handles HEIC, PNG, WEBP, etc. with automatic resizing for large images
  */
 export async function ensureJpeg(
   inputBuffer: Buffer
@@ -91,6 +61,7 @@ export async function ensureJpeg(
     metadata = await sharpInstance.metadata();
     console.log("Original metadata:", metadata);
 
+    // If its already a small JPEG, return
     if (
       metadata.format === "jpeg" &&
       metadata.width &&
@@ -100,10 +71,12 @@ export async function ensureJpeg(
       return { jpegBuffer: inputBuffer, metadata };
     }
 
+    // Handle HEIC/HEIF images
     if (metadata.format === "heif") {
       console.log("Converting HEIF using Sharp...");
       let pipeline = sharp(inputBuffer);
 
+      // Resize if image is too large
       if (metadata.width && metadata.height) {
         const totalPixels = metadata.width * metadata.height;
         if (totalPixels > 4000000) {
@@ -129,6 +102,7 @@ export async function ensureJpeg(
       return { jpegBuffer, metadata };
     }
 
+    // Handle other common formats (PNG, WEBP, TIFF, GIF)
     if (
       metadata.format &&
       ["png", "webp", "tiff", "gif"].includes(metadata.format)
@@ -136,6 +110,7 @@ export async function ensureJpeg(
       console.log(`Converting ${metadata.format} using Sharp...`);
       let pipeline = sharp(inputBuffer);
 
+      // Same resizing logic for other formats
       if (metadata.width && metadata.height) {
         const totalPixels = metadata.width * metadata.height;
         if (totalPixels > 4000000) {
@@ -165,6 +140,7 @@ export async function ensureJpeg(
   } catch (err: any) {
     console.error("Error in ensureJpeg:", err.message);
 
+    // Last resort: try to convert anyway with aggressive resizing 😭
     try {
       console.log("Attempting fallback conversion with Sharp...");
       const jpegBuffer = await sharp(inputBuffer)
@@ -182,21 +158,12 @@ export async function ensureJpeg(
 }
 
 /**
- * Processes JPEG images by automatically resizing and/or compressing to meet size constraints.
- * First attempts resizing if image exceeds dimension limits. If still over size limit after resizing,
- * applies JPEG compression using binary search to find optimal quality setting.
- *
- * @param {Buffer} inputBuffer - The raw image buffer to process
- * @returns {Promise<Buffer>} A Promise resolving to the processed JPEG buffer
- * @throws {Error} If image metadata cannot be retrieved or processing fails
- *
- * @example
- * // Process an image to be under 5MB and max dimension of 1200px
- * const processedBuffer = await compressJpeg(originalBuffer);
+ * Smart JPEG compression: resize first, then compress if needed
+ * Uses binary search to find the best quality setting
  */
 export async function processJpeg(inputBuffer: Buffer): Promise<Buffer> {
-  const maxSizeBytes = 5 * 1024 * 1024 * 0.66; // 5MB to limit
-  const maxDimension = 1200;
+  const maxSizeBytes = 5 * 1024 * 1024 * 0.66; // Target: ~3.3MB
+  const maxDimension = 1200; // Max width/height
 
   try {
     let buffer = inputBuffer;
@@ -207,7 +174,7 @@ export async function processJpeg(inputBuffer: Buffer): Promise<Buffer> {
 
     let currentSize = metadata.size;
 
-    // check and resize before compressing
+    // Resize if image is too large
     if (currentSize > maxSizeBytes) {
       buffer = await sharp(inputBuffer)
         .resize({
@@ -224,7 +191,6 @@ export async function processJpeg(inputBuffer: Buffer): Promise<Buffer> {
         throw new Error("Failed to get size after resizing");
       }
 
-      // Update currentSize with the new size after resizing
       currentSize = metadata.size;
 
       console.log(
@@ -232,16 +198,16 @@ export async function processJpeg(inputBuffer: Buffer): Promise<Buffer> {
       );
     }
 
-    // Early return if size is now below the limit
+    // If resizing fixed the size issue, we're done
     if (currentSize <= maxSizeBytes) {
       return buffer;
     }
 
-    // Step 2: Apply JPEG compression with binary search to find optimal quality
-    // Start with quality estimation based on current size vs target size
+    // Apply JPEG compression with binary search
     let minQuality = 10;
     let maxQuality = 90;
-    // uses ratio of current size : desired size to find quality to compress to
+
+    // Estimate starting quality based on current vs target size
     let targetQuality = Math.min(
       maxQuality,
       Math.max(minQuality, Math.round((maxSizeBytes / currentSize) * 100))
@@ -250,10 +216,10 @@ export async function processJpeg(inputBuffer: Buffer): Promise<Buffer> {
     let attempts = 0;
     const maxAttempts = 8;
 
+    // Binary search for optimal quality setting
     while (attempts < maxAttempts) {
       attempts++;
 
-      // Compress the resized image with the current quality setting
       const compressedBuffer = await sharp(buffer)
         .jpeg({ quality: targetQuality })
         .toBuffer();
@@ -271,7 +237,7 @@ export async function processJpeg(inputBuffer: Buffer): Promise<Buffer> {
         return compressedBuffer;
       }
 
-      // Binary search adjustment
+      // Adjust quality range based on result
       if (compressedSize > maxSizeBytes) {
         maxQuality = targetQuality;
         targetQuality = Math.floor((minQuality + targetQuality) / 2);
@@ -281,10 +247,10 @@ export async function processJpeg(inputBuffer: Buffer): Promise<Buffer> {
       }
     }
 
-    // Final safeguard with lowest acceptable quality if binary search fails to produce sufficient quality reduction
+    // Final attempt with lowest acceptable quality
     return await sharp(buffer).jpeg({ quality: minQuality }).toBuffer();
   } catch (err) {
     console.error("Error while compressing image:", err);
-    throw err; // Re-throw to maintain Promise rejection
+    throw err;
   }
 }

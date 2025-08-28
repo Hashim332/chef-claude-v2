@@ -2,7 +2,7 @@ import express from "express";
 import { db } from "../src/firebase";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { requireAuth, getAuth } from "@clerk/express";
-import { Recipe } from "../backend-utils";
+import { Recipe } from "../utils/recipeUtils";
 
 const router = express.Router();
 
@@ -51,6 +51,9 @@ router.delete("/user-recipes/:recipeId", requireAuth(), async (req, res) => {
     await deleteDoc(doc(db, "users", userId, "recipes", recipeId));
     res.status(200).json();
     return;
+
+    // the DELETE endpoint should only handle deletion, not return data
+    // deprecated code only for reference
 
     // const querySnapshot = await getDocs(
     //   collection(db, "users", userId, "recipes")
