@@ -1,6 +1,9 @@
 import "dotenv/config";
 import Anthropic from "@anthropic-ai/sdk";
 
+// TODO: add some user input validation, if the entered "ingredients" is not actually
+// a list of ingredients, return an error message and limit token usage
+
 const SYSTEM_PROMPT =
   "You are a helpful assistant that generates a recipe based on a user's provided ingredients. \
 Respond with a JavaScript-style object that can be safely parsed using JSON.parse(). \

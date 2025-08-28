@@ -11,14 +11,12 @@ class ImageProcessingError extends Error {
   }
 }
 
-// router.use(express.json());
-
+// customising multer middleware to only accept image files and restrict file size
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit to support newer phone cameras
   fileFilter: (req, file, cb) => {
-    // Accept only image files
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
