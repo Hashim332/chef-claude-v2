@@ -6,6 +6,8 @@ import {
   SignInButton,
   SignOutButton,
 } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
+import DeleteAccountBtn from "./DeleteAccountBtn";
 
 export default function Navbar() {
   return (
@@ -51,6 +53,8 @@ export default function Navbar() {
                 Sign out
               </Button>
             </SignOutButton>
+
+            <DeleteAccountBtn />
           </SignedIn>
         </li>
       </ul>

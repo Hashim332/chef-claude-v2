@@ -6,7 +6,7 @@ import byIngredientsRoute from "../routes/by-ingredients";
 import byImageRoute from "../routes/by-image";
 import saveRecipeRoute from "../routes/save-recipe";
 import userRecipesRoute from "../routes/user-recipes";
-
+import deleteAccountRoute from "../routes/delete-account";
 const app = express();
 // Convert port to number for express.listen()
 const port = parseInt(process.env.PORT || "8000", 10);
@@ -42,6 +42,7 @@ app.use("/api", byImageRoute);
 // Protected routes
 app.use("/api", clerkMiddleware(), saveRecipeRoute);
 app.use("/api", clerkMiddleware(), userRecipesRoute);
+app.use("/api", clerkMiddleware(), deleteAccountRoute);
 
 // Error handlers
 process.on("uncaughtException", (error) => {
@@ -55,7 +56,7 @@ process.on("unhandledRejection", (reason, promise) => {
 // Start server
 app
   .listen(port, "0.0.0.0", () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running on port http://localhost:${port}`);
   })
   .on("error", (err) => {
     console.error("Server startup error:", err);
